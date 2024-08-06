@@ -122,6 +122,8 @@ firebase.json
 
 # Firebase
 lib/firebase_options.dart
+lib/firebase_options_prod.dart
+lib/firebase_options_dev.dart
 ios/Runner/GoogleService-Info.plist
 ios/firebase_app_id_file.json
 macos/Runner/GoogleService-Info.plist
