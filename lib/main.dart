@@ -4,14 +4,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:fortune/firebase_options_prod.dart';
 import 'package:fortune/src/app.dart';
+import 'package:fortune/src/firebase_options_prod.dart';
 
 const reCAPTCHAsiteKey = '6LeoQxYqAAAAAKUGi7-laBmbQCosZLASZfMJbqWH';
 const debugToken = '4e7a1696-3be5-4462-8959-4cb247181f51';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // MobileAds.instance.initialize();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -26,14 +27,16 @@ void main() async {
     // 1. Debug provider
     // 2. Safety Net provider
     // 3. Play Integrity provider
-    androidProvider: AndroidProvider.debug,
+    androidProvider:
+        kReleaseMode ? AndroidProvider.playIntegrity : AndroidProvider.debug,
     // Default provider for iOS/macOS is the Device Check provider. You can use the "AppleProvider" enum to choose
     // your preferred provider. Choose from:
     // 1. Debug provider
     // 2. Device Check provider
     // 3. App Attest provider
     // 4. App Attest provider with fallback to Device Check provider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
-    appleProvider: AppleProvider.appAttest,
+    appleProvider:
+        kReleaseMode ? AppleProvider.deviceCheck : AppleProvider.appAttest,
   );
   // ! Uncomment this if you need to sign out when switching between Firebase
   // * projects (e.g. Firebase Local emulator vs real Firebase backend)

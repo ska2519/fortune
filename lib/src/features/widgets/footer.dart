@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../generated/flutter_gen/assets.gen.dart';
+
 class Footer extends StatelessWidget {
   const Footer({super.key});
 
@@ -49,6 +51,12 @@ class FooterLinks extends StatelessWidget {
       runSpacing: 4,
       spacing: 4,
       children: [
+        FooterLink(
+          child: Assets.icons.furitshopAppIcon.image(width: 24, height: 24),
+          onPressed: () => launchUrl(
+            Uri.parse('https://fruitshop.app'),
+          ),
+        ),
         ContactEmail(),
         // FooterLink(text: 'Twitter'),
         // SizedBox(width: 32),
@@ -96,8 +104,9 @@ class ContactEmail extends StatelessWidget {
 }
 
 class FooterLink extends StatelessWidget {
-  const FooterLink({super.key, required this.text, this.onPressed});
-  final String text;
+  const FooterLink({super.key, this.text, this.onPressed, this.child});
+  final String? text;
+  final Widget? child;
   final VoidCallback? onPressed;
 
   @override
@@ -108,12 +117,14 @@ class FooterLink extends StatelessWidget {
       style: TextButton.styleFrom(
         padding: EdgeInsets.all(8),
       ),
-      child: Text(
-        text,
-        style: textTheme.labelMedium!.copyWith(
-          color: Theme.of(context).hintColor,
-        ),
-      ),
+      child: child != null
+          ? child!
+          : Text(
+              text ?? '',
+              style: textTheme.labelMedium!.copyWith(
+                color: Theme.of(context).hintColor,
+              ),
+            ),
     );
   }
 }

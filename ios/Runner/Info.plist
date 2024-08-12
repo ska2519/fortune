@@ -45,5 +45,10 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-2418665308297154~9626298603</string>
+	<!-- Bypass GADApplicationIdentifier check for WebView API for Ads -->
+	<key>GADIntegrationManager</key>
+	<string>webview</string>
 </dict>
 </plist>

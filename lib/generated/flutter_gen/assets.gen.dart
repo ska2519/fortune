@@ -57,33 +57,19 @@ class $AssetsFacesGen {
       ];
 }
 
-class $AssetsImagesGen {
-  const $AssetsImagesGen();
+class $AssetsIconsGen {
+  const $AssetsIconsGen();
 
-  /// File path: assets/images/cat.jpg
-  AssetGenImage get cat => const AssetGenImage('assets/images/cat.jpg');
-
-  /// File path: assets/images/image_drag.png
-  AssetGenImage get imageDrag =>
-      const AssetGenImage('assets/images/image_drag.png');
-
-  /// File path: assets/images/messi.webp
-  AssetGenImage get messi => const AssetGenImage('assets/images/messi.webp');
-
-  /// File path: assets/images/moon_jae_in.webp
-  AssetGenImage get moonJaeIn =>
-      const AssetGenImage('assets/images/moon_jae_in.webp');
-
-  /// File path: assets/images/scones.jpg
-  AssetGenImage get scones => const AssetGenImage('assets/images/scones.jpg');
-
-  /// File path: assets/images/yang_min_hyuk.webp
-  AssetGenImage get yangMinHyuk =>
-      const AssetGenImage('assets/images/yang_min_hyuk.webp');
+  /// File path: assets/icons/furitshop_app_icon.png
+  AssetGenImage get furitshopAppIcon =>
+      const AssetGenImage('assets/icons/furitshop_app_icon.png');
 
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [cat, imageDrag, messi, moonJaeIn, scones, yangMinHyuk];
+  List<AssetGenImage> get values => [furitshopAppIcon];
+}
+
+class $AssetsImagesGen {
+  const $AssetsImagesGen();
 }
 
 class $AssetsTellersGen {
@@ -108,9 +94,14 @@ class $AssetsTellersGen {
 class Assets {
   Assets._();
 
+  static const AssetGenImage appIcon = AssetGenImage('assets/app_icon.png');
   static const $AssetsFacesGen faces = $AssetsFacesGen();
+  static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const $AssetsTellersGen tellers = $AssetsTellersGen();
+
+  /// List of all assets
+  static List<AssetGenImage> get values => [appIcon];
 }
 
 class AssetGenImage {

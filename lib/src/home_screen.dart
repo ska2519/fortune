@@ -18,25 +18,34 @@ import 'package:emoji_flag_converter/emoji_flag_converter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fortune/generated/flutter_gen/assets.gen.dart';
 import 'package:fortune/src/app.dart';
 import 'package:fortune/src/common_widgets/responsive_center.dart';
 import 'package:fortune/src/common_widgets/responsive_two_column_layout.dart';
 import 'package:fortune/src/constants/breakpoints.dart';
 import 'package:fortune/src/constants/gradient.dart';
-import 'package:fortune/src/footer.dart';
+import 'package:fortune/src/features/payment/presentation/buy_me_a_coffee_button.dart';
+import 'package:fortune/src/features/payment/presentation/themes.dart';
+import 'package:fortune/src/features/physiognomy/data/image_upload_repository.dart';
+import 'package:fortune/src/features/physiognomy/data/statistics_repository.dart';
+import 'package:fortune/src/features/physiognomy/domain/physiognomy.dart';
+import 'package:fortune/src/features/physiognomy/domain/prompts.dart';
+import 'package:fortune/src/features/widgets/app_bar_title.dart';
+import 'package:fortune/src/features/widgets/footer.dart';
+import 'package:fortune/src/features/widgets/lsd_image_animation.dart';
 import 'package:fortune/src/localization/data/locale_notifier.dart';
 import 'package:fortune/src/localization/data/most_spoken_languages.dart';
-import 'package:fortune/src/physiognomy/data/image_upload_repository.dart';
-import 'package:fortune/src/physiognomy/domain/physiognomy.dart';
-import 'package:fortune/src/prompts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:markdown_widget/widget/markdown.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-final GlobalKey _loadingDialogKey = GlobalKey();
+// final GlobalKey _loadingDialogKey = GlobalKey();
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -49,7 +58,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool _loading = false;
   late final GenerativeModel _model;
   Image? image;
-
   final faces = [
     Assets.faces.aionyHaust3TLl97HNJoUnsplash,
     Assets.faces.danieFrancoA6O7pgc7vHgUnsplash,
@@ -74,6 +82,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       model: 'gemini-1.5-flash-preview-0514',
       generationConfig: GenerationConfig(
         temperature: 2.0,
+        responseMimeType: 'application/json',
       ),
       safetySettings: [
         SafetySetting(
@@ -149,30 +158,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ]),
           ];
 
-          // showDialog(
-          //   context: context,
-          //   barrierDismissible: true,
-          //   builder: (context) {
-          //     return AlertDialog(
-          //       key: _loadingDialogKey,
-          //       title: Row(
-          //         children: [
-          //           LoadingAnimationWidget.dotsTriangle(
-          //             color: Colors.deepPurpleAccent,
-          //             size: 32,
-          //           ),
-          //           SizedBox(width: 16),
-          //           Text('Analyzing face...🔮'),
-          //         ],
-          //       ),
-          //       content: ClipRRect(
-          //         borderRadius: BorderRadius.circular(16),
-          //         child: image,
-          //       ),
-          //     );
-          //   },
-          // );
-
           var response = await _model.generateContent(content);
           var text = response.text;
 
@@ -193,7 +178,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             );
             debugPrint('physiognomy: $physiognomy');
             if (physiognomy.difficulties.isNotEmpty) {
+              ref.read(statisticsRepositoryProvider).incrementCount();
+
               // Navigator.pop(_loadingDialogKey.currentContext!);
+
               //! goNamed로 이동해야 web 브라우저에서 주소 변경 가능
               context.goNamed(
                 AppRoute.physiognomy.name,
@@ -221,6 +209,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         width: 100,
         key: _scaffoldKey,
         child: ListView(
+          shrinkWrap: true,
           physics: ClampingScrollPhysics(),
           children: [
             DrawerHeader(
@@ -241,7 +230,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 final emojiFlag =
                     EmojiConverter.fromAlpha2CountryCode(locale.countryCode!);
 
-                return ref.read(localeProvider).locale == locale
+                return ref.watch(localeProvider).locale == locale
                     ? SizedBox.shrink()
                     : ListTile(
                         title: Center(child: Text(emojiFlag)),
@@ -280,12 +269,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           EmojiConverter.fromAlpha2CountryCode(
                             ref.watch(localeProvider).locale.countryCode!,
                           ),
+                          style: TextStyle(fontSize: 24),
                         ),
                       ),
                     ),
                   ],
                 ),
                 SizedBox(height: 60),
+
                 ResponsiveTwoColumnLayout(
                   spacing: 80,
                   startFlex: 1,
@@ -319,7 +310,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         child: Consumer(
                           builder: (context, ref, child) {
                             final translatedText = ref.watch(translatedTextProvider(
-                                'Discover your potential based on the unique features of your face.\nOur AI-powered analysis provides personalized recommendations to help you thrive.'));
+                                "Discover your potential based on the unique features of your face.\nExplore the deeper meaning behind your facial features.\nFace Reading offers a unique perspective on self-discovery."));
                             return translatedText.when(
                               data: (text) => Text(
                                 text,
@@ -360,14 +351,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ),
                       SizedBox(height: 32),
                       if (image != null)
-                        Padding(
-                          padding: const EdgeInsets.all(32.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: image,
-                          ),
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(32.0),
+                              child: BackdropFilter(
+                                filter: ui.ImageFilter.blur(
+                                  sigmaX: 8,
+                                  sigmaY: 8,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: LSDImageAnimation(image: image!),
+                                ),
+                              ),
+                            ),
+                            SpinKitRipple(
+                              size: MediaQuery.of(context).size.width / 2,
+                              itemBuilder: (context, index) => Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(500),
+                                  color: index.isEven
+                                      ? Colors.deepPurpleAccent.withOpacity(0.3)
+                                      : Colors.yellowAccent.withOpacity(0.3),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      // SizedBox(height: 16),
+                      SizedBox(height: 16),
                       ElevatedButton.icon(
                         onPressed: !_loading
                             ? () async {
@@ -417,64 +430,155 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       SizedBox(height: 16),
                       Consumer(
                         builder: (context, ref, child) {
-                          final translatedText = ref.watch(translatedTextProvider(
-                              'We do not store any personal information, including facial images.'));
-                          return translatedText.when(
-                            data: (text) => Text(
-                              text,
-                              textAlign: TextAlign.center,
-                              style: textTheme.labelMedium!
-                                  .copyWith(color: Colors.grey[800]),
-                            ),
-                            loading: () => Text(''),
-                            error: (e, st) => Text(''),
-                          );
+                          final records =
+                              ref.watch(recordsStreamProvider).value;
+                          final faceReadingTranslatedText = ref.watch(
+                              translatedTextProvider(
+                                  'people checked their Face Reading and identified suitable jobs.'));
+                          final translatedText = ref.watch(
+                              translatedTextProvider('Last Face Reading: '));
+                          return records == null
+                              ? SizedBox.shrink()
+                              : Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    RichText(
+                                      textAlign: TextAlign.center,
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: records.faceReadings
+                                                    .toString() +
+                                                ' ',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelLarge!
+                                                .copyWith(
+                                                  color:
+                                                      Colors.deepPurpleAccent,
+                                                ),
+                                          ),
+                                          TextSpan(
+                                            text: ' ',
+                                          ),
+                                          TextSpan(
+                                            text:
+                                                faceReadingTranslatedText.value,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelLarge,
+                                          ),
+                                          TextSpan(
+                                            text: ' 🔮',
+                                            style:
+                                                textTheme.labelMedium!.copyWith(
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    RichText(
+                                      textAlign: TextAlign.right,
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: translatedText.value,
+                                            style: textTheme.labelSmall!
+                                                .copyWith(
+                                                    color: Colors.grey[800]),
+                                          ),
+                                          TextSpan(
+                                            text: ref
+                                                    .watch(
+                                                      translatedTextProvider(
+                                                        timeago.format(
+                                                            records.timestamp),
+                                                      ),
+                                                    )
+                                                    .value ??
+                                                '',
+                                            style: textTheme.labelSmall!
+                                                .copyWith(
+                                                    color: Colors.grey[800]),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                );
                         },
                       ),
-
-                      //   '323 people found their occupations through face reading.',
-                      //   textAlign: TextAlign.center,
-                      //   style: Theme.of(context).textTheme.labelLarge,
-                      // ),
+                      SizedBox(height: 60),
                     ],
                   ),
                 ),
+
                 SizedBox(
                     height:
                         MediaQuery.of(context).size.width > Breakpoint.tablet
                             ? 140
                             : 80),
+                Consumer(
+                  builder: (context, ref, child) {
+                    final translatedText = ref.watch(translatedTextProvider(
+                        'If blocked due to policy. Please try again.'));
+                    return translatedText.when(
+                      data: (text) => Text(
+                        text,
+                        style: textTheme.labelSmall!
+                            .copyWith(color: Colors.redAccent),
+                      ),
+                      loading: () => Text(''),
+                      error: (e, st) => Text(''),
+                    );
+                  },
+                ),
+                SizedBox(height: 32),
+                Divider(),
+                SizedBox(height: 64),
+
+                MarkdownWidget(
+                  data: faceReading,
+                  shrinkWrap: true,
+                ),
+
+                SizedBox(height: 80),
                 Footer(),
+
+                BuyMeACoffeeButton(
+                  sponsorID: "ska2519",
+                  shopID: kReleaseMode ? '230822' : '230812',
+                  backgroundColor: Colors.red,
+                  customText: 'Buy me a coffee',
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  theme: OrangeTheme(),
+                  // customText: '현실 직업 추천 AI',
+                  textStyle: textTheme.titleLarge!.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+                // ElevatedButton(
+                //   onPressed: () async {
+                //     ref.read(statisticsRepositoryProvider).incrementCount();
+                //     final count = await ref
+                //         .read(statisticsRepositoryProvider)
+                //         .getFaceReadingsCount();
+                //     print('count: $count');
+                //     // Navigator.push(
+                //     //   context,
+                //     //   MaterialPageRoute(builder: (context) => AdSenseWeb()),
+                //     // );
+                //   },
+                //   child: Text('incrementCount'),
+                // ),
+                // SizedBox(height: 16),
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class AppBarTitle extends StatelessWidget {
-  const AppBarTitle({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return InkWell(
-      onTap: () => context.goNamed(AppRoute.home.name),
-      child: Consumer(
-        builder: (context, ref, child) {
-          final translatedText =
-              ref.watch(translatedTextProvider('🔮 Face Reading AI'));
-          return translatedText.when(
-            data: (text) => Text(
-              text,
-              style: textTheme.titleLarge,
-            ),
-            loading: () => Text(''),
-            error: (e, st) => Text(''),
-          );
-        },
       ),
     );
   }

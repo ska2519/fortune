@@ -16,11 +16,11 @@
             // Initialize the Flutter engine.
             await engineInitializer.initializeEngine({ useColorEmoji: true })
             .then(function(appRunner) {
-            appRunner.runApp();
             document.getElementById('anim_loading').style.display = 'none';
+            appRunner.runApp();
             });;
             // // Add a delay before running the app to create a smooth crossfade effect.
-            await addDelay();
+            // await addDelay();
     
             // // Run the Flutter app.
             // await appRunner.runApp();

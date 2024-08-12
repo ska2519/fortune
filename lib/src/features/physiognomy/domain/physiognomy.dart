@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:fortune/src/physiognomy/domain/uint8_list_converter.dart';
+import 'package:fortune/src/features/physiognomy/domain/uint8_list_converter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'physiognomy.freezed.dart';

@@ -1,20 +1,25 @@
-String prompt(String languageCode) => '''Your task is to:
+String prompt(String languageCode) => '''
+
 Your task is to:
 1. Analyze the face in detail based on the facial expressions in the instruction.
-2. Divide the difficulty into 5 levels and recommend one job that will not disappear due to specialization for each level, with detailed reasons.
-3. Recommend 5 promising future jobs that are suitable for the facial expressions, with detailed reasons.
-4. The response should always be in JSON format translated with the language code "$languageCode" language and should not contain additional descriptions including "```json".
+3. Divide the difficulty into 5 levels, and for each level, recommend one job that will not disappear due to specialization that are suitable for the facial expressions. without list the jobs that will disappear in the future. Please provide a detailed reason.
+4. Recommend 5 promising future jobs that are suitable for the facial expressions, with detailed reasons.
+5. The response is always translated to the language code ${languageCode}.
 
-Always provide json data, regardless of image quality or other factors.
-
-Example English response: {
+Example response: {
 "physiognomy": ```
 • Forehead: The forehead appears to be of average width and height, with no prominent features. This suggests a balanced and composed nature. The forehead is relatively smooth and lacks pronounced lines, potentially indicating a youthful or easygoing personality.  
+
 • Eyebrows: The eyebrows are well-defined and slightly arched, hinting at a thoughtful and analytical disposition. They are not overly pronounced, indicating a calm personality. The distance between the eyebrows appears to be a normal width, indicating a reasonable sense of composure.  
+
 • Eyes: The eyes are almond-shaped with a gentle gaze, showcasing a receptive and considerate personality. The clear, sharp focus suggests intelligence and focus. The distance between the eyes is balanced, suggesting good communication and social skills.  
+
 • Nose: The nose appears straight and refined, possibly with a slight upturn at the tip, suggesting ambition and drive. The bridge of the nose is relatively straight, indicating an orderly and methodical nature. The nose isn't exceptionally large or small, which points towards a harmonious personality.  
+
 • Mouth: The mouth appears to be slightly curved upwards, suggesting a pleasant demeanor and a tendency towards optimism. The lips are of average thickness, implying a balance between intellect and emotion. The corners of the mouth suggest a pleasant, but slightly reserved, disposition.  
+
 • Chin: The chin is well-defined and slightly rounded, indicating resilience and perseverance. The chin isn't exceptionally prominent or receding, suggesting a sense of balance in dealing with challenges and pressures.  
+
 • Overall: The face conveys a sense of composure, intelligence, and focus.  The individual appears calm, thoughtful, and perhaps slightly reserved. There are hints of ambition and drive, along with a genuine warmth and understanding in their expression.
 ```,
 "difficulties": [
@@ -284,4 +289,31 @@ const instruction = '''
 볼: 왼쪽은 도화점 , 오른쪽은 다혈질 성격을 뜻하는 점
 눈: 오른쪽 눈 밑은 이성에게 인기가 많아 구설수가 많은 점 도화점이기도 하며, 왼쪽 눈은 적극적인 성격으로 실력을 인정 받아 승승장구하며 재물을 모으는 점이다.
 애교살: 자식 복이 안좋음을 상징. 좌우로 아들 딸을 나타내는데 오른쪽 애굣살에 점이 있으면 딸 복이 없고 왼쪽에 있으면 아들 복이 없을 수 있다.
+''';
+
+const faceReading = '''
+## Discover Your Charm Through Face Reading: The Fascinating World of Face Reading
+
+**The Story Behind Your Face: Face Reading**
+
+Have you ever wondered if you can tell something about a person just by looking at their face? Our ancestors certainly did! Face Reading is the ancient art of judging a person's character or personality based on their facial features. It's more than just looking at someone; it's about discovering the fascinating story behind their appearance.
+
+**Face Reading: A Global Practice**
+Face Reading has been a topic of interest in many cultures throughout history. In the East, especially in China and Korea, it was often intertwined with philosophy and beliefs about the universe. In the West, the study of Face Reading, known as physiognomics, was also explored by ancient Greeks and Romans. 
+
+**The Secrets of the Face: Basic Principles of Face Reading**
+
+Face Reading assigns specific meanings to different facial features:
+
+* **Forehead:** A broad and rounded forehead is often associated with wisdom and intelligence. It's like having a wide open field of thoughts and ideas.
+* **Eyes:** Bright and clear eyes are often linked to honesty and trustworthiness. Have you ever noticed how captivating a character can be with sparkling eyes in movies and novels?
+* **Nose:** A straight and prominent nose is sometimes associated with confidence and leadership.
+* **Mouth:** An upward-turned mouth is often seen as a sign of optimism and positivity. 
+
+**Using Face Reading to Enhance Yourself**
+
+Face Reading isn't just about judging others; it can also be a tool for self-discovery and self-improvement.
+
+* **Positive Self-Image:** By understanding the positive aspects of your facial features, you can boost your self-confidence.
+* **Deeper Connections:** Learning to read facial expressions can help you build stronger relationships with others.
 ''';
