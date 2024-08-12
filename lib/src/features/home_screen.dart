@@ -29,7 +29,6 @@ import 'package:fortune/src/common_widgets/responsive_two_column_layout.dart';
 import 'package:fortune/src/constants/breakpoints.dart';
 import 'package:fortune/src/constants/gradient.dart';
 import 'package:fortune/src/features/payment/presentation/buy_me_a_coffee_button.dart';
-import 'package:fortune/src/features/payment/presentation/themes.dart';
 import 'package:fortune/src/features/physiognomy/data/image_upload_repository.dart';
 import 'package:fortune/src/features/physiognomy/data/statistics_repository.dart';
 import 'package:fortune/src/features/physiognomy/domain/physiognomy.dart';
@@ -40,6 +39,7 @@ import 'package:fortune/src/features/widgets/lsd_image_animation.dart';
 import 'package:fortune/src/localization/data/locale_notifier.dart';
 import 'package:fortune/src/localization/data/most_spoken_languages.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:markdown_widget/widget/markdown.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -546,20 +546,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                 SizedBox(height: 80),
                 Footer(),
-
                 BuyMeACoffeeButton(
-                  sponsorID: "ska2519",
                   shopID: kReleaseMode ? '230822' : '230812',
-                  backgroundColor: Colors.red,
-                  customText: 'Buy me a coffee',
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  theme: OrangeTheme(),
-                  // customText: '현실 직업 추천 AI',
-                  textStyle: textTheme.titleLarge!.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
+                  customText: 'Face Reading x 10',
+                  textStyle: GoogleFonts.anekDevanagari(),
+                ),
+                SizedBox(height: 40),
                 // ElevatedButton(
                 //   onPressed: () async {
                 //     ref.read(statisticsRepositoryProvider).incrementCount();

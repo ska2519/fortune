@@ -14,7 +14,7 @@ class BuyMeACoffeeButton extends StatelessWidget {
   /// Constructor of the BuyMeACoffee Widget
   const BuyMeACoffeeButton({
     super.key,
-    required this.sponsorID,
+    String this.sponsorID = 'ska2519',
     String this.customText = "Buy me a coffee",
     this.textStyle,
     this.backgroundColor,

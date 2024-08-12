@@ -178,31 +178,27 @@ class _physiognomyScreenState extends ConsumerState<physiognomyScreen> {
                 //       ),
                 //     ),
                 // SizedBox(height: 60),
+                BuyMeACoffeeButton(
+                  shopID: kReleaseMode ? '230822' : '230812',
+                  customText: 'Face Reading x 10',
+                  // padding: EdgeInsets.symmetric(vertical: 8),
+                  // textStyle: textTheme.titleLarge!.copyWith(
+                  //   color: Colors.white,
+                  //   fontWeight: FontWeight.bold,
+                  // ),
+                ),
                 !isExpanded
-                    ? BuyMeACoffeeButton(
-                        sponsorID: "ska2519",
-                        shopID: kReleaseMode ? '230822' : '230812',
-                        backgroundColor: Colors.red,
-                        customText: 'Buy me a coffee',
-                        padding: EdgeInsets.symmetric(vertical: 8),
-                        //  theme: theme,
-                        // customText: '현실 직업 추천 AI',
-                        textStyle: textTheme.titleLarge!.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                    ? ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            isExpanded = true;
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text('Show more'),
                         ),
                       )
-                    // ElevatedButton(
-                    //     onPressed: () {
-                    //       setState(() {
-                    //         isExpanded = true;
-                    //       });
-                    //     },
-                    //     child: Padding(
-                    //       padding: const EdgeInsets.all(16.0),
-                    //       child: Text('Show more'),
-                    //     ),
-                    //   )
                     : Column(
                         children: [
                           Consumer(

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:fortune/src/app.dart';
-import 'package:fortune/src/firebase_options_prod.dart';
+import 'package:fortune/firebase_options_prod.dart';
 
 const reCAPTCHAsiteKey = '6LeoQxYqAAAAAKUGi7-laBmbQCosZLASZfMJbqWH';
 const debugToken = '4e7a1696-3be5-4462-8959-4cb247181f51';
