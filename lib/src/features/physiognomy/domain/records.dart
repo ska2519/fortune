@@ -11,6 +11,7 @@ class Records with _$Records {
   const factory Records({
     @Default(0) int faceReadings,
     @TimestampConverter() required DateTime timestamp,
+    @Default(0) int remainingFaceReadings,
   }) = _Records;
 
   factory Records.fromJson(Map<String, dynamic> json) =>

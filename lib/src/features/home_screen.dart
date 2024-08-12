@@ -66,7 +66,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     Assets.faces.jackFinniganRriAI0nhcbcUnsplash,
     Assets.faces.juricaKoletic7YVZYZeITc8Unsplash,
   ];
-  int remainingCount = 10;
   @override
   void initState() {
     super.initState();
@@ -434,47 +433,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                       ),
                       SizedBox(height: 4),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Consumer(
-                            builder: (context, ref, child) {
-                              final translatedText = ref.watch(
-                                  translatedTextProvider(
-                                      'remaining opportunity: $remainingCount'));
-
-                              return translatedText.when(
-                                data: (text) => Text(
-                                  text,
-                                  style: textTheme.labelSmall!.copyWith(
-                                    color: remainingCount > 0
-                                        ? Colors.black
-                                        : Colors.redAccent,
-                                  ),
-                                ),
-                                loading: () => Text(''),
-                                error: (e, st) => Text(''),
-                              );
-                            },
-                          ),
-                          SizedBox(width: 4),
-                        ],
-                      ),
-                      SizedBox(height: 16),
                       Consumer(
                         builder: (context, ref, child) {
                           final records =
                               ref.watch(recordsStreamProvider).value;
+                          final remainingTranslatedText = ref.watch(
+                              translatedTextProvider(
+                                  'Remaining opportunity : '));
                           final faceReadingTranslatedText = ref.watch(
                               translatedTextProvider(
                                   'People checked their Face Reading and identified suitable jobs.'));
                           final translatedText = ref.watch(
-                              translatedTextProvider('Last Face Reading: '));
+                              translatedTextProvider('Last Face Reading : '));
+
                           return records == null
                               ? SizedBox.shrink()
                               : Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          '${remainingTranslatedText.value} ${records.remainingFaceReadings}',
+                                          style:
+                                              textTheme.labelMedium!.copyWith(
+                                            color:
+                                                records.remainingFaceReadings >
+                                                        0
+                                                    ? Colors.black
+                                                    : Colors.redAccent,
+                                          ),
+                                        ),
+                                        SizedBox(width: 4),
+                                      ],
+                                    ),
+                                    SizedBox(height: 16),
                                     RichText(
                                       textAlign: TextAlign.center,
                                       text: TextSpan(

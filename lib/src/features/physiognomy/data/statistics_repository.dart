@@ -27,7 +27,7 @@ class StatisticsRepository {
 
   Future<Records> getRecords() async {
     final snapshot = await db.collection(collection).doc(documentId).get();
-    return snapshot.data()?[field] ?? 0; // 데이터가 없을 경우 0으로 처리
+    return Records.fromJson(snapshot.data() ?? {});
   }
 
   Stream<Records> recordsStream() => db
@@ -36,9 +36,7 @@ class StatisticsRepository {
       .snapshots()
       .asBroadcastStream()
       .map(
-        (snapshot) => Records.fromJson(
-          snapshot.data() ?? {},
-        ),
+        (snapshot) => Records.fromJson(snapshot.data() ?? {}),
       ); // 데이터가 없을 경우 0으로 처리
 
   Stream<int> faceReadingsCountStream() => db

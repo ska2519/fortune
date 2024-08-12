@@ -23,6 +23,7 @@ mixin _$Records {
   int get faceReadings => throw _privateConstructorUsedError;
   @TimestampConverter()
   DateTime get timestamp => throw _privateConstructorUsedError;
+  int get remainingFaceReadings => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -34,7 +35,10 @@ abstract class $RecordsCopyWith<$Res> {
   factory $RecordsCopyWith(Records value, $Res Function(Records) then) =
       _$RecordsCopyWithImpl<$Res, Records>;
   @useResult
-  $Res call({int faceReadings, @TimestampConverter() DateTime timestamp});
+  $Res call(
+      {int faceReadings,
+      @TimestampConverter() DateTime timestamp,
+      int remainingFaceReadings});
 }
 
 /// @nodoc
@@ -52,6 +56,7 @@ class _$RecordsCopyWithImpl<$Res, $Val extends Records>
   $Res call({
     Object? faceReadings = null,
     Object? timestamp = null,
+    Object? remainingFaceReadings = null,
   }) {
     return _then(_value.copyWith(
       faceReadings: null == faceReadings
@@ -62,6 +67,10 @@ class _$RecordsCopyWithImpl<$Res, $Val extends Records>
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      remainingFaceReadings: null == remainingFaceReadings
+          ? _value.remainingFaceReadings
+          : remainingFaceReadings // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -73,7 +82,10 @@ abstract class _$$RecordsImplCopyWith<$Res> implements $RecordsCopyWith<$Res> {
       __$$RecordsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int faceReadings, @TimestampConverter() DateTime timestamp});
+  $Res call(
+      {int faceReadings,
+      @TimestampConverter() DateTime timestamp,
+      int remainingFaceReadings});
 }
 
 /// @nodoc
@@ -89,6 +101,7 @@ class __$$RecordsImplCopyWithImpl<$Res>
   $Res call({
     Object? faceReadings = null,
     Object? timestamp = null,
+    Object? remainingFaceReadings = null,
   }) {
     return _then(_$RecordsImpl(
       faceReadings: null == faceReadings
@@ -99,6 +112,10 @@ class __$$RecordsImplCopyWithImpl<$Res>
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      remainingFaceReadings: null == remainingFaceReadings
+          ? _value.remainingFaceReadings
+          : remainingFaceReadings // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -107,7 +124,9 @@ class __$$RecordsImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$RecordsImpl extends _Records {
   const _$RecordsImpl(
-      {this.faceReadings = 0, @TimestampConverter() required this.timestamp})
+      {this.faceReadings = 0,
+      @TimestampConverter() required this.timestamp,
+      this.remainingFaceReadings = 0})
       : super._();
 
   factory _$RecordsImpl.fromJson(Map<String, dynamic> json) =>
@@ -119,10 +138,13 @@ class _$RecordsImpl extends _Records {
   @override
   @TimestampConverter()
   final DateTime timestamp;
+  @override
+  @JsonKey()
+  final int remainingFaceReadings;
 
   @override
   String toString() {
-    return 'Records(faceReadings: $faceReadings, timestamp: $timestamp)';
+    return 'Records(faceReadings: $faceReadings, timestamp: $timestamp, remainingFaceReadings: $remainingFaceReadings)';
   }
 
   @override
@@ -133,12 +155,15 @@ class _$RecordsImpl extends _Records {
             (identical(other.faceReadings, faceReadings) ||
                 other.faceReadings == faceReadings) &&
             (identical(other.timestamp, timestamp) ||
-                other.timestamp == timestamp));
+                other.timestamp == timestamp) &&
+            (identical(other.remainingFaceReadings, remainingFaceReadings) ||
+                other.remainingFaceReadings == remainingFaceReadings));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, faceReadings, timestamp);
+  int get hashCode =>
+      Object.hash(runtimeType, faceReadings, timestamp, remainingFaceReadings);
 
   @JsonKey(ignore: true)
   @override
@@ -157,7 +182,8 @@ class _$RecordsImpl extends _Records {
 abstract class _Records extends Records {
   const factory _Records(
       {final int faceReadings,
-      @TimestampConverter() required final DateTime timestamp}) = _$RecordsImpl;
+      @TimestampConverter() required final DateTime timestamp,
+      final int remainingFaceReadings}) = _$RecordsImpl;
   const _Records._() : super._();
 
   factory _Records.fromJson(Map<String, dynamic> json) = _$RecordsImpl.fromJson;
@@ -167,6 +193,8 @@ abstract class _Records extends Records {
   @override
   @TimestampConverter()
   DateTime get timestamp;
+  @override
+  int get remainingFaceReadings;
   @override
   @JsonKey(ignore: true)
   _$$RecordsImplCopyWith<_$RecordsImpl> get copyWith =>
