@@ -8,6 +8,7 @@ import 'package:fortune/src/features/physiognomy/domain/physiognomy.dart';
 import 'package:fortune/src/features/widgets/app_bar_title.dart';
 import 'package:fortune/src/features/widgets/footer.dart';
 import 'package:fortune/src/localization/data/locale_notifier.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 
 class physiognomyScreen extends ConsumerStatefulWidget {
@@ -178,15 +179,6 @@ class _physiognomyScreenState extends ConsumerState<physiognomyScreen> {
                 //       ),
                 //     ),
                 // SizedBox(height: 60),
-                BuyMeACoffeeButton(
-                  shopID: kReleaseMode ? '230822' : '230812',
-                  customText: 'Face Reading x 10',
-                  // padding: EdgeInsets.symmetric(vertical: 8),
-                  // textStyle: textTheme.titleLarge!.copyWith(
-                  //   color: Colors.white,
-                  //   fontWeight: FontWeight.bold,
-                  // ),
-                ),
                 !isExpanded
                     ? ElevatedButton(
                         onPressed: () {
@@ -280,6 +272,14 @@ class _physiognomyScreenState extends ConsumerState<physiognomyScreen> {
                 //   ),
                 // ),
                 Footer(),
+                BuyMeACoffeeButton(
+                  shopID: kReleaseMode ? '230822' : '230812',
+                  customText: 'Support Face Reading x 10',
+                  textStyle: GoogleFonts.poppins(
+                    fontSize: 20,
+                  ),
+                ),
+                SizedBox(height: 40),
               ],
             ),
           ),

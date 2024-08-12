@@ -66,7 +66,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     Assets.faces.jackFinniganRriAI0nhcbcUnsplash,
     Assets.faces.juricaKoletic7YVZYZeITc8Unsplash,
   ];
-
+  int remainingCount = 10;
   @override
   void initState() {
     super.initState();
@@ -171,7 +171,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
             String cleanedJsonString = removeUnnecessaryCharacters(text);
             final cleanedJson = json.decode(cleanedJsonString);
-
+            if (cleanedJson['error'] != null) {
+              _showError(cleanedJson['error']);
+              return;
+            }
             var physiognomy = Physiognomy.fromJson(cleanedJson);
             physiognomy = physiognomy.copyWith(
               imageBytes: bytes,
@@ -206,7 +209,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return Scaffold(
       endDrawer: Drawer(
-        width: 100,
+        width: 120,
         key: _scaffoldKey,
         child: ListView(
           shrinkWrap: true,
@@ -231,7 +234,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     EmojiConverter.fromAlpha2CountryCode(locale.countryCode!);
 
                 return ref.watch(localeProvider).locale == locale
-                    ? SizedBox.shrink()
+                    ? SizedBox()
                     : ListTile(
                         title: Center(child: Text(emojiFlag)),
                         onTap: () {
@@ -261,18 +264,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     AppBarTitle(),
-                    Builder(
-                      builder: (context) => IconButton(
+                    Builder(builder: (context) {
+                      final text = EmojiConverter.fromAlpha2CountryCode(
+                        ref.watch(localeProvider).locale.countryCode!,
+                      );
+
+                      return IconButton(
                         padding: EdgeInsets.zero,
-                        onPressed: Scaffold.of(context).openEndDrawer,
+                        onPressed: () => Scaffold.of(context).openEndDrawer(),
                         icon: Text(
-                          EmojiConverter.fromAlpha2CountryCode(
-                            ref.watch(localeProvider).locale.countryCode!,
-                          ),
+                          text,
                           style: TextStyle(fontSize: 24),
                         ),
-                      ),
-                    ),
+                      );
+                    }),
                   ],
                 ),
                 SizedBox(height: 60),
@@ -417,7 +422,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   builder: (context, ref, child) {
                                     final translatedText = ref.watch(
                                         translatedTextProvider(
-                                            'Get your fate with Face Reading'));
+                                            'Find your job of fate with Face Reading'));
+
                                     return translatedText.when(
                                       data: (text) => Text(text),
                                       loading: () => Text(''),
@@ -427,6 +433,33 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 ),
                         ),
                       ),
+                      SizedBox(height: 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Consumer(
+                            builder: (context, ref, child) {
+                              final translatedText = ref.watch(
+                                  translatedTextProvider(
+                                      'remaining opportunity: $remainingCount'));
+
+                              return translatedText.when(
+                                data: (text) => Text(
+                                  text,
+                                  style: textTheme.labelSmall!.copyWith(
+                                    color: remainingCount > 0
+                                        ? Colors.black
+                                        : Colors.redAccent,
+                                  ),
+                                ),
+                                loading: () => Text(''),
+                                error: (e, st) => Text(''),
+                              );
+                            },
+                          ),
+                          SizedBox(width: 4),
+                        ],
+                      ),
                       SizedBox(height: 16),
                       Consumer(
                         builder: (context, ref, child) {
@@ -434,7 +467,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               ref.watch(recordsStreamProvider).value;
                           final faceReadingTranslatedText = ref.watch(
                               translatedTextProvider(
-                                  'people checked their Face Reading and identified suitable jobs.'));
+                                  'People checked their Face Reading and identified suitable jobs.'));
                           final translatedText = ref.watch(
                               translatedTextProvider('Last Face Reading: '));
                           return records == null
@@ -537,7 +570,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
                 SizedBox(height: 32),
                 Divider(),
-                SizedBox(height: 64),
 
                 MarkdownWidget(
                   data: faceReading,
@@ -548,8 +580,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 Footer(),
                 BuyMeACoffeeButton(
                   shopID: kReleaseMode ? '230822' : '230812',
-                  customText: 'Face Reading x 10',
-                  textStyle: GoogleFonts.anekDevanagari(),
+                  customText: 'Support Face Reading x 10',
+                  textStyle: GoogleFonts.poppins(
+                    fontSize: 20,
+                  ),
                 ),
                 SizedBox(height: 40),
                 // ElevatedButton(

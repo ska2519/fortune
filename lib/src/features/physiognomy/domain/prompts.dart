@@ -1,61 +1,141 @@
+// String prompt(String languageCode) => '''
+
+// Your task is to:
+// 1. Analyze the face in detail based on the facial expressions in the instruction.
+// 3. Divide the difficulty into 5 levels, and for each level, recommend one job that will not disappear due to specialization that are suitable for the facial expressions. without list the jobs that will disappear in the future. Please provide a detailed reason.
+// 4. Recommend 5 promising future jobs that are suitable for the facial expressions, with detailed reasons.
+// 5. The response is always translated to the language code ${languageCode}.
+
+// Example response: {
+// "physiognomy": ```
+// • Forehead: The forehead appears to be of average width and height, with no prominent features. This suggests a balanced and composed nature. The forehead is relatively smooth and lacks pronounced lines, potentially indicating a youthful or easygoing personality.
+
+// • Eyebrows: The eyebrows are well-defined and slightly arched, hinting at a thoughtful and analytical disposition. They are not overly pronounced, indicating a calm personality. The distance between the eyebrows appears to be a normal width, indicating a reasonable sense of composure.
+
+// • Eyes: The eyes are almond-shaped with a gentle gaze, showcasing a receptive and considerate personality. The clear, sharp focus suggests intelligence and focus. The distance between the eyes is balanced, suggesting good communication and social skills.
+
+// • Nose: The nose appears straight and refined, possibly with a slight upturn at the tip, suggesting ambition and drive. The bridge of the nose is relatively straight, indicating an orderly and methodical nature. The nose isn't exceptionally large or small, which points towards a harmonious personality.
+
+// • Mouth: The mouth appears to be slightly curved upwards, suggesting a pleasant demeanor and a tendency towards optimism. The lips are of average thickness, implying a balance between intellect and emotion. The corners of the mouth suggest a pleasant, but slightly reserved, disposition.
+
+// • Chin: The chin is well-defined and slightly rounded, indicating resilience and perseverance. The chin isn't exceptionally prominent or receding, suggesting a sense of balance in dealing with challenges and pressures.
+
+// • Overall: The face conveys a sense of composure, intelligence, and focus.  The individual appears calm, thoughtful, and perhaps slightly reserved. There are hints of ambition and drive, along with a genuine warmth and understanding in their expression.
+// ```,
+// "difficulties": [
+//   {
+//     "level":1,
+//     "job": "Customer service representative",
+//     "emoji": "👩‍💼",
+//     "reason": "reason",
+//     },
+//     {
+//       "level": 2,
+//       "job": "Data analyst",
+//       "emoji": "👩‍💻",
+//       "reason": "reason",
+//     },
+//     {
+//       "level": 3,
+//       "job": "Human Resources Specialist",
+//       "emoji": "👩‍💼",
+//       "reason": "reason",
+//     },
+//     {
+//       "level": 4,
+//       "job": "Mediator",
+//       "emoji": "🧘🏻‍♀️",
+//       "reason": "reason",
+//     },
+//     {
+//       "level": 5,
+//       "job": "Negotiator",
+//       "emoji": "🤵🏻",
+//       "reason": "reason",
+//     }
+//   ],
+//   "promisingJobs":
+//   [
+//     {
+//       "job": "Data Analyst",
+//       "emoji": "📊",
+//       "expertise": 7,
+//       "expertStudyPeriod": "2-3 years",
+//       "reason": "reason",
+//     },
+//     {
+//       "job": "Software Developer",
+//       "emoji": "💻",
+//       "expertise": 8,
+//       "expertStudyPeriod": "3-5 years",
+//       "reason": "reason",
+//     },
+//     {
+//       "job": "UX Designer",
+//       "emoji": "🖼️",
+//       "expertise": 6,
+//       "expertStudyPeriod": "1-2 years",
+//       "reason": "reason",
+//     },
+//     {
+//       "job": "Financial Analyst",
+//       "emoji": "💰",
+//       "expertise": 7,
+//       "expertStudyPeriod": "2-3 years",
+//       "reason": "reason",
+//     },
+//     {
+//       "job": "Marketing Manager",
+//       "emoji": "📞",
+//       "expertise": 6,
+//       "expertStudyPeriod": "1-2 years",
+//       "reason": "reason",
+//     }
+//   ]
+// }
+
+// Example of unwanted response (Never respond like this)
+
+// By clearly instructing the AI to avoid additional commentary and focus on a straightforward score and reason, the responses should become more direct and aligned with your requirements. Remember to maintain respect and avoid making assumptions about gender or personal characteristics beyond visible features. ''';
+
 String prompt(String languageCode) => '''
 
 Your task is to:
-1. Analyze the face in detail based on the facial expressions in the instruction.
-3. Divide the difficulty into 5 levels, and for each level, recommend one job that will not disappear due to specialization that are suitable for the facial expressions. without list the jobs that will disappear in the future. Please provide a detailed reason.
-4. Recommend 5 promising future jobs that are suitable for the facial expressions, with detailed reasons.
-5. The response is always translated to the language code ${languageCode}.
+1. Analyze the image provided. If it contains a face, analyze the face in detail based on the facial expressions in the instruction.
+2. If the image does not contain a face, provide a JSON response indicating this.
+3. For images containing faces:
+   * Divide the difficulty of analyzing the face into 5 levels, and for each level, recommend one job that will not disappear due to specialization that are suitable for the facial expressions. Without listing the jobs that will disappear in the future, please provide a detailed reason for each job recommendation.
+   * Recommend 5 promising future jobs that are suitable for the facial expressions, with detailed reasons.
+4. The response is always translated to the language code: ${languageCode}.
 
-Example response: {
-"physiognomy": ```
-• Forehead: The forehead appears to be of average width and height, with no prominent features. This suggests a balanced and composed nature. The forehead is relatively smooth and lacks pronounced lines, potentially indicating a youthful or easygoing personality.  
+**Example response for an image with a face:**
 
-• Eyebrows: The eyebrows are well-defined and slightly arched, hinting at a thoughtful and analytical disposition. They are not overly pronounced, indicating a calm personality. The distance between the eyebrows appears to be a normal width, indicating a reasonable sense of composure.  
+{
+  "physiognomy":```
+• Forehead: The forehead appears to be of average width and height, with no prominent features. This suggests a balanced and composed nature. The forehead is relatively smooth and lacks pronounced lines, potentially indicating a youthful or easygoing personality.
 
-• Eyes: The eyes are almond-shaped with a gentle gaze, showcasing a receptive and considerate personality. The clear, sharp focus suggests intelligence and focus. The distance between the eyes is balanced, suggesting good communication and social skills.  
+• Eyebrows: The eyebrows are well-defined and slightly arched, hinting at a thoughtful and analytical disposition. They are not overly pronounced, indicating a calm personality. The distance between the eyebrows appears to be a normal width, indicating a reasonable sense of composure.
 
-• Nose: The nose appears straight and refined, possibly with a slight upturn at the tip, suggesting ambition and drive. The bridge of the nose is relatively straight, indicating an orderly and methodical nature. The nose isn't exceptionally large or small, which points towards a harmonious personality.  
+• Eyes: The eyes are almond-shaped with a gentle gaze, showcasing a receptive and considerate personality. The clear, sharp focus suggests intelligence and focus. The distance between the eyes is balanced, suggesting good communication and social skills.
 
-• Mouth: The mouth appears to be slightly curved upwards, suggesting a pleasant demeanor and a tendency towards optimism. The lips are of average thickness, implying a balance between intellect and emotion. The corners of the mouth suggest a pleasant, but slightly reserved, disposition.  
+• Nose: The nose appears straight and refined, possibly with a slight upturn at the tip, suggesting ambition and drive. The bridge of the nose is relatively straight, indicating an orderly and methodical nature. The nose isn't exceptionally large or small, which points towards a harmonious personality.
 
-• Chin: The chin is well-defined and slightly rounded, indicating resilience and perseverance. The chin isn't exceptionally prominent or receding, suggesting a sense of balance in dealing with challenges and pressures.  
+• Mouth: The mouth appears to be slightly curved upwards, suggesting a pleasant demeanor and a tendency towards optimism. The lips are of average thickness, implying a balance between intellect and emotion. The corners of the mouth suggest a pleasant, but slightly reserved, disposition.
+
+• Chin: The chin is well-defined and slightly rounded, indicating resilience and perseverance. The chin isn't exceptionally prominent or receding, suggesting a sense of balance in dealing with challenges and pressures.
 
 • Overall: The face conveys a sense of composure, intelligence, and focus.  The individual appears calm, thoughtful, and perhaps slightly reserved. There are hints of ambition and drive, along with a genuine warmth and understanding in their expression.
 ```,
-"difficulties": [
-  {
-    "level":1,
-    "job": "Customer service representative",
-    "emoji": "👩‍💼",
-    "reason": "reason",
-    },
+  "difficulties": [
     {
-      "level": 2,
-      "job": "Data analyst",
-      "emoji": "👩‍💻",
-      "reason": "reason",
-    },
-    {
-      "level": 3,
-      "job": "Human Resources Specialist",
+      "level": 1,
+      "job": "Customer service representative",
       "emoji": "👩‍💼",
       "reason": "reason",
     },
-    {
-      "level": 4,
-      "job": "Mediator",
-      "emoji": "🧘🏻‍♀️",
-      "reason": "reason",
-    },
-    {
-      "level": 5,
-      "job": "Negotiator",
-      "emoji": "🤵🏻",
-      "reason": "reason",
-    }
+    {/* ... other difficulty levels */}
   ],
-  "promisingJobs": 
-  [
+  "promisingJobs": [
     {
       "job": "Data Analyst",
       "emoji": "📊",
@@ -63,38 +143,17 @@ Example response: {
       "expertStudyPeriod": "2-3 years",
       "reason": "reason",
     },
-    {
-      "job": "Software Developer",
-      "emoji": "💻",
-      "expertise": 8,
-      "expertStudyPeriod": "3-5 years",
-      "reason": "reason",
-    },
-    {
-      "job": "UX Designer",
-      "emoji": "🖼️",
-      "expertise": 6,
-      "expertStudyPeriod": "1-2 years",
-      "reason": "reason",
-    },
-    {
-      "job": "Financial Analyst",
-      "emoji": "💰",
-      "expertise": 7,
-      "expertStudyPeriod": "2-3 years",
-      "reason": "reason",
-    },
-    {
-      "job": "Marketing Manager",
-      "emoji": "📞",
-      "expertise": 6,
-      "expertStudyPeriod": "1-2 years",
-      "reason": "reason",
-    }
+    {/* ... other promising jobs */}
   ]
 }
 
-Example of unwanted response (Never respond like this)
+**Example response for an image without a face:**
+
+{
+  "error": "Image does not contain a face."
+}
+
+**Example of unwanted response (Never respond like this):**
 
 By clearly instructing the AI to avoid additional commentary and focus on a straightforward score and reason, the responses should become more direct and aligned with your requirements. Remember to maintain respect and avoid making assumptions about gender or personal characteristics beyond visible features. ''';
 

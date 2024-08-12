@@ -20,6 +20,7 @@ class BuyMeACoffeeButton extends StatelessWidget {
     this.backgroundColor,
     this.theme,
     this.padding,
+    this.isNewTab = true,
     this.shopID,
   }) : _isIconOnly = false;
 
@@ -30,6 +31,7 @@ class BuyMeACoffeeButton extends StatelessWidget {
     this.theme,
     this.padding,
     this.shopID,
+    this.isNewTab = true,
   })  : _isIconOnly = false,
         customText = null,
         textStyle = null;
@@ -65,6 +67,7 @@ class BuyMeACoffeeButton extends StatelessWidget {
   /// Find more [BuyMeACoffeeThemeData]
   final BuyMeACoffeeThemeData? theme;
 
+  final bool isNewTab;
   @override
   Widget build(BuildContext context) {
     var backgroundColor = this.backgroundColor;
@@ -90,17 +93,14 @@ class BuyMeACoffeeButton extends StatelessWidget {
         final uri = Uri.parse(
           buyMeACoffeeUrl + sponsorID + (shopID != null ? "/e/$shopID" : ""),
         );
+
         await launchUrl(
           uri,
-          webOnlyWindowName: '_self',
+          webOnlyWindowName: isNewTab ? '_blank' : '_self',
         );
       },
       child: Container(
-        height: 50,
-        padding: padding ??
-            EdgeInsets.symmetric(vertical: 8
-                // horizontal: _isIconOnly ? 0 : 10.0,
-                ),
+        padding: padding ?? EdgeInsets.symmetric(vertical: 8),
         decoration: const BoxDecoration(),
         child: _isIconOnly || customText == null || customText.isEmpty
             ? iconWidget
@@ -109,17 +109,20 @@ class BuyMeACoffeeButton extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   iconWidget,
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(
-                      customText,
-                      style: textStyle ??
-                          GoogleFonts.cookie(
-                            color:
-                                theme == null ? Colors.white : theme!.textColor,
-                            fontSize: 28.0,
-                            letterSpacing: 0.6,
-                          ),
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        customText,
+                        style: textStyle ??
+                            GoogleFonts.cookie(
+                              color: theme == null
+                                  ? Colors.white
+                                  : theme!.textColor,
+                              fontSize: 28.0,
+                              letterSpacing: 0.6,
+                            ),
+                      ),
                     ),
                   ),
                 ],
