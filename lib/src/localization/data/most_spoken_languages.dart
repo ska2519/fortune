@@ -27,3 +27,19 @@ const List<Locale> mostSpokenLanguageLocales = [
   Locale('sv', 'SE'), // 스웨덴: 스웨덴어
   Locale('no', 'NO'), // 노르웨이: 노르웨이어
 ];
+
+class LocaleWithFlag {
+  final Locale locale;
+  final String flagImagePath;
+
+  LocaleWithFlag(this.locale, this.flagImagePath);
+}
+
+List<LocaleWithFlag> mostSpokenLanguageLocalesWithFlags = [
+  ...mostSpokenLanguageLocales,
+].map((locale) {
+  // 플래그 이미지 파일 경로 생성 (예시)
+  String flagImagePath =
+      'assets/flags/${locale.languageCode.toLowerCase()}.webp';
+  return LocaleWithFlag(locale, flagImagePath);
+}).toList();

@@ -57,6 +57,114 @@ class $AssetsFacesGen {
       ];
 }
 
+class $AssetsFlagsGen {
+  const $AssetsFlagsGen();
+
+  /// File path: assets/flags/ar.webp
+  AssetGenImage get ar => const AssetGenImage('assets/flags/ar.webp');
+
+  /// File path: assets/flags/bn.webp
+  AssetGenImage get bn => const AssetGenImage('assets/flags/bn.webp');
+
+  /// File path: assets/flags/cn.webp
+  AssetGenImage get cn => const AssetGenImage('assets/flags/cn.webp');
+
+  /// File path: assets/flags/de.webp
+  AssetGenImage get de => const AssetGenImage('assets/flags/de.webp');
+
+  /// File path: assets/flags/en.webp
+  AssetGenImage get en => const AssetGenImage('assets/flags/en.webp');
+
+  /// File path: assets/flags/es.webp
+  AssetGenImage get es => const AssetGenImage('assets/flags/es.webp');
+
+  /// File path: assets/flags/fa.webp
+  AssetGenImage get fa => const AssetGenImage('assets/flags/fa.webp');
+
+  /// File path: assets/flags/fr.webp
+  AssetGenImage get fr => const AssetGenImage('assets/flags/fr.webp');
+
+  /// File path: assets/flags/hi.webp
+  AssetGenImage get hi => const AssetGenImage('assets/flags/hi.webp');
+
+  /// File path: assets/flags/id.webp
+  AssetGenImage get id => const AssetGenImage('assets/flags/id.webp');
+
+  /// File path: assets/flags/it.webp
+  AssetGenImage get it => const AssetGenImage('assets/flags/it.webp');
+
+  /// File path: assets/flags/ja.webp
+  AssetGenImage get ja => const AssetGenImage('assets/flags/ja.webp');
+
+  /// File path: assets/flags/ko.webp
+  AssetGenImage get ko => const AssetGenImage('assets/flags/ko.webp');
+
+  /// File path: assets/flags/ms.webp
+  AssetGenImage get ms => const AssetGenImage('assets/flags/ms.webp');
+
+  /// File path: assets/flags/nl.webp
+  AssetGenImage get nl => const AssetGenImage('assets/flags/nl.webp');
+
+  /// File path: assets/flags/no.webp
+  AssetGenImage get no => const AssetGenImage('assets/flags/no.webp');
+
+  /// File path: assets/flags/pl.webp
+  AssetGenImage get pl => const AssetGenImage('assets/flags/pl.webp');
+
+  /// File path: assets/flags/pt.webp
+  AssetGenImage get pt => const AssetGenImage('assets/flags/pt.webp');
+
+  /// File path: assets/flags/ru.webp
+  AssetGenImage get ru => const AssetGenImage('assets/flags/ru.webp');
+
+  /// File path: assets/flags/sv.webp
+  AssetGenImage get sv => const AssetGenImage('assets/flags/sv.webp');
+
+  /// File path: assets/flags/th.webp
+  AssetGenImage get th => const AssetGenImage('assets/flags/th.webp');
+
+  /// File path: assets/flags/tr.webp
+  AssetGenImage get tr => const AssetGenImage('assets/flags/tr.webp');
+
+  /// File path: assets/flags/uk.webp
+  AssetGenImage get uk => const AssetGenImage('assets/flags/uk.webp');
+
+  /// File path: assets/flags/ur.webp
+  AssetGenImage get ur => const AssetGenImage('assets/flags/ur.webp');
+
+  /// File path: assets/flags/vi.webp
+  AssetGenImage get vi => const AssetGenImage('assets/flags/vi.webp');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [
+        ar,
+        bn,
+        cn,
+        de,
+        en,
+        es,
+        fa,
+        fr,
+        hi,
+        id,
+        it,
+        ja,
+        ko,
+        ms,
+        nl,
+        no,
+        pl,
+        pt,
+        ru,
+        sv,
+        th,
+        tr,
+        uk,
+        ur,
+        vi
+      ];
+}
+
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
@@ -96,6 +204,7 @@ class Assets {
 
   static const AssetGenImage appIcon = AssetGenImage('assets/app_icon.png');
   static const $AssetsFacesGen faces = $AssetsFacesGen();
+  static const $AssetsFlagsGen flags = $AssetsFlagsGen();
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const $AssetsTellersGen tellers = $AssetsTellersGen();
