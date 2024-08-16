@@ -1,4 +1,3 @@
-// localeProvider 정의 (예시: ChangeNotifier 사용)
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fortune/src/localization/data/most_spoken_languages.dart';

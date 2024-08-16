@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fortune/generated/flutter_gen/fonts.gen.dart';
+import 'package:fortune/src/features/home_screen.dart';
 import 'package:fortune/src/features/physiognomy/domain/physiognomy.dart';
 import 'package:fortune/src/features/physiognomy/presentation/physiognomy_screen.dart';
-import 'package:fortune/src/features/home_screen.dart';
 import 'package:go_router/go_router.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

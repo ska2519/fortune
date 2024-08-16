@@ -122,8 +122,6 @@ flutter:
   fonts:
   - family: NanumSquareNeo
     fonts:
-      - asset: assets/fonts/NanumSquareNeoOTF-Lt.otf
-        weight: 300
       - asset: assets/fonts/NanumSquareNeoOTF-Rg.otf
         weight: 400
       - asset: assets/fonts/NanumSquareNeoOTF-Bd.otf
