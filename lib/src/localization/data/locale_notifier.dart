@@ -19,14 +19,33 @@ class LocaleNotifier extends ChangeNotifier {
 
 final localeProvider = ChangeNotifierProvider((ref) => LocaleNotifier());
 
-final translatedTextProvider =
-    FutureProvider.family<String, String>((ref, input) async {
-  final locale = ref.watch(localeProvider);
-  final translator = ref.read(translatorProvider);
+final translatedTextProvider = FutureProvider.family<String, String>(
+  (ref, input) async {
+    final translator = ref.read(translatorProvider);
+    final locale = ref.watch(localeProvider);
 
-  final from = 'en';
-  final to = locale.locale.languageCode;
-  final translatorResult =
-      await translator.translate(input, from: from, to: to);
-  return translatorResult.text;
-});
+    final from = 'en';
+    final to = locale.locale.languageCode;
+    if (from != to) {
+      final translatorResult =
+          await translator.translate(input, from: from, to: to);
+      var text = translatorResult.text;
+      debugPrint('text: $text');
+      if (to == 'ko') {
+        if (text.contains('Face Reading')) {
+          return text.replaceAll('Face Reading', "관상");
+        } else if (text.contains('얼굴 특징')) {
+          return text.replaceAll('얼굴 특징', "관상");
+        } else if (text.contains('얼굴 독서는')) {
+          return text.replaceAll('얼굴 독서는', "관상은");
+        } else if (text.contains('얼굴 읽기')) {
+          return text.replaceAll('얼굴 읽기', "관상");
+        } else if (text.contains('얼굴을')) {
+          return text.replaceAll('얼굴을', "관상을");
+        }
+      }
+      return text;
+    }
+    return input;
+  },
+);

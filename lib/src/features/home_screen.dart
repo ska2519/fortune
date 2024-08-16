@@ -328,8 +328,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           child: Consumer(
                             builder: (context, ref, child) {
                               final translatedText = ref.watch(
-                                  translatedTextProvider(
-                                      "Discover your potential based on the unique features of your face.\nExplore the deeper meaning behind your facial features.\nFace Reading offers a unique perspective on self-discovery."));
+                                translatedTextProvider(
+                                  "Discover your potential based on the unique features of your face.\nExplore the deeper meaning behind your facial features.\nFace Reading AI offers a unique perspective on self-discovery.",
+                                ),
+                              );
                               return translatedText.when(
                                 data: (text) => Text(
                                   text,
