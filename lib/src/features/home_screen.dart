@@ -173,6 +173,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               _showError(cleanedJson['error']);
               return;
             }
+            debugPrint('cleanedJson: $cleanedJson');
             var physiognomy = Physiognomy.fromJson(cleanedJson);
             physiognomy = physiognomy.copyWith(
               imageBytes: bytes,
@@ -231,11 +232,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ? SizedBox()
                       : ListTile(
                           title: Center(
-                              child: Image.asset(
-                            localeWithFlag.flagImagePath,
-                            width: 32,
-                            height: 32,
-                          )),
+                            child: Image.asset(
+                              localeWithFlag.flagImagePath,
+                              width: 32,
+                              height: 32,
+                            ),
+                          ),
                           onTap: () {
                             ref.read(localeProvider.notifier).locale =
                                 localeWithFlag.locale;
@@ -466,6 +468,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 ? SizedBox.shrink()
                                 : Column(
                                     mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
                                     children: [
                                       Row(
                                         mainAxisAlignment:
@@ -486,41 +490,46 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                         ],
                                       ),
                                       SizedBox(height: 16),
-                                      RichText(
-                                        textAlign: TextAlign.center,
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: records.faceReadings
-                                                      .toString() +
-                                                  ' ',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelLarge!
-                                                  .copyWith(
-                                                    color:
-                                                        Colors.deepPurpleAccent,
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Flexible(
+                                            child: RichText(
+                                              textAlign: TextAlign.center,
+                                              text: TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                    text: records.faceReadings
+                                                            .toString() +
+                                                        ' ',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .labelLarge!
+                                                        .copyWith(
+                                                          color: Colors
+                                                              .deepPurpleAccent,
+                                                        ),
                                                   ),
-                                            ),
-                                            TextSpan(
-                                              text: ' ',
-                                            ),
-                                            TextSpan(
-                                              text: faceReadingTranslatedText
-                                                  .value,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelLarge,
-                                            ),
-                                            TextSpan(
-                                              text: ' 🔮',
-                                              style: textTheme.labelMedium!
-                                                  .copyWith(
-                                                fontSize: 16,
+                                                  TextSpan(
+                                                    text: ' ',
+                                                  ),
+                                                  TextSpan(
+                                                    text:
+                                                        faceReadingTranslatedText
+                                                            .value,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .labelLarge,
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                          Assets.appIcon
+                                              .image(width: 16, height: 16),
+                                        ],
                                       ),
                                       SizedBox(height: 8),
                                       RichText(
@@ -584,6 +593,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                   MarkdownWidget(
                     data: faceReading,
+                    selectable: true,
                     shrinkWrap: true,
                   ),
 

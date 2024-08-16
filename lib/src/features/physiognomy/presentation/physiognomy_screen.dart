@@ -95,6 +95,7 @@ class _physiognomyScreenState extends ConsumerState<physiognomyScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: MarkdownWidget(
                         data: physiognomy.physiognomy,
+                        selectable: true,
                         shrinkWrap: true,
                       ),
                     ),
