@@ -32,15 +32,28 @@ final translatedTextProvider = FutureProvider.family<String, String>(
       debugPrint('text: $text');
       if (to == 'ko') {
         if (text.contains('Face Reading')) {
-          return text.replaceAll('Face Reading', "관상");
-        } else if (text.contains('얼굴 특징')) {
-          return text.replaceAll('얼굴 특징', "관상");
-        } else if (text.contains('얼굴 독서는')) {
-          return text.replaceAll('얼굴 독서는', "관상은");
-        } else if (text.contains('얼굴 읽기')) {
-          return text.replaceAll('얼굴 읽기', "관상");
-        } else if (text.contains('얼굴을')) {
-          return text.replaceAll('얼굴을', "관상을");
+          text = text.replaceAll('Face Reading', "관상");
+        }
+        if (text.contains('얼굴 특징')) {
+          text = text.replaceAll('얼굴 특징', "관상");
+        }
+        if (text.contains('얼굴 독서는')) {
+          text = text.replaceAll('얼굴 독서는', "관상은");
+        }
+        if (text.contains('얼굴 읽기')) {
+          text = text.replaceAll('얼굴 읽기', "관상");
+        }
+        if (text.contains('얼굴을')) {
+          text = text.replaceAll('얼굴을', "관상을");
+        }
+        if (text.contains('찾으십시오')) {
+          text = text.replaceAll('찾으십시오', "찾으세요");
+        }
+        if (text.contains('하십시오')) {
+          text = text.replaceAll('하십시오', "하세요");
+        }
+        if (text.contains('잠금 해제하세요')) {
+          text = text.replaceAll('잠금 해제하세요', "확인 하세요");
         }
       }
       return text;

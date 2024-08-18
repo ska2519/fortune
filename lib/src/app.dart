@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fortune/generated/flutter_gen/fonts.gen.dart';
 import 'package:fortune/src/features/home_screen.dart';
-import 'package:fortune/src/features/physiognomy/domain/physiognomy.dart';
-import 'package:fortune/src/features/physiognomy/presentation/physiognomy_screen.dart';
+import 'package:fortune/src/features/face_reading/domain/face_reading.dart';
+import 'package:fortune/src/features/face_reading/presentation/face_reading_screen.dart';
 import 'package:go_router/go_router.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -43,15 +43,15 @@ class App extends StatelessWidget {
 
 enum AppRoute {
   home,
-  physiognomy,
+  faceReading,
 }
 
 final _router = GoRouter(
   initialLocation: '/',
   redirect: (context, state) {
     final path = state.uri.path;
-    if (path == '/${AppRoute.physiognomy.name}' &&
-        (state.extra == null || state.extra is! Physiognomy?)) {
+    if (path == '/${AppRoute.faceReading.name}' &&
+        (state.extra == null || state.extra is! FaceReading?)) {
       return '/';
     }
     return null;
@@ -63,13 +63,13 @@ final _router = GoRouter(
       builder: (context, state) => HomeScreen(),
       routes: [
         GoRoute(
-          name: AppRoute.physiognomy.name,
-          path: AppRoute.physiognomy.name,
+          name: AppRoute.faceReading.name,
+          path: AppRoute.faceReading.name,
           pageBuilder: (context, state) {
-            final physiognomy = state.extra as Physiognomy;
+            final faceReading = state.extra as FaceReading;
             return CustomTransitionPage(
               key: state.pageKey,
-              child: physiognomyScreen(physiognomy: physiognomy),
+              child: FaceReadingScreen(faceReading: faceReading),
               transitionDuration: const Duration(milliseconds: 1500),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {

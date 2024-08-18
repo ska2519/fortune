@@ -114,6 +114,7 @@ class BuyMeACoffeeButton extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
                         customText,
+                        textAlign: TextAlign.center,
                         style: textStyle ??
                             GoogleFonts.cookie(
                               color: theme == null
