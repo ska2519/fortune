@@ -51,6 +51,18 @@
   <!-- <script>self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;</script> -->
   <script>self.FIREBASE_APPCHECK_DEBUG_TOKEN = '4e7a1696-3be5-4462-8959-4cb247181f51';</script>
   
+  <!-- Force HTML renderer for bots -->
+  <script>
+			import("./scripts/botd-1.1.0.js")
+				.then((botd) => botd.load())
+				.then((botd) => botd.detect())
+				.then(function (result) {
+					if (result.bot) {
+						window.flutterWebRenderer = "html";
+					}
+				});
+		</script>
+
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

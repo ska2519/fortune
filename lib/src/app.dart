@@ -4,6 +4,7 @@ import 'package:fortune/src/features/home_screen.dart';
 import 'package:fortune/src/features/face_reading/domain/face_reading.dart';
 import 'package:fortune/src/features/face_reading/presentation/face_reading_screen.dart';
 import 'package:go_router/go_router.dart';
+import 'package:seo/seo.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -12,31 +13,35 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      key: navigatorKey,
-      debugShowCheckedModeBanner: false,
-      title: 'Face Reading AI',
-      theme: ThemeData(
-        fontFamily: FontFamily.nanumSquareNeo,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurpleAccent,
-          brightness: Brightness.light,
-        ),
-
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.0),
-            ),
-            backgroundColor:
-                Colors.deepPurpleAccent, // background (button) color
-            foregroundColor: Colors.white, // foreground (text) color
+    return SeoController(
+      enabled: true,
+      tree: WidgetTree(context: context),
+      child: MaterialApp.router(
+        key: navigatorKey,
+        debugShowCheckedModeBanner: false,
+        title: 'Face Reading AI',
+        theme: ThemeData(
+          fontFamily: FontFamily.nanumSquareNeo,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.deepPurpleAccent,
+            brightness: Brightness.light,
           ),
+      
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0),
+              ),
+              backgroundColor:
+                  Colors.deepPurpleAccent, // background (button) color
+              foregroundColor: Colors.white, // foreground (text) color
+            ),
+          ),
+          useMaterial3: true,
+          // scaffoldBackgroundColor: Color(0xFF1c0f10),
         ),
-        useMaterial3: true,
-        // scaffoldBackgroundColor: Color(0xFF1c0f10),
+        routerConfig: _router,
       ),
-      routerConfig: _router,
     );
   }
 }

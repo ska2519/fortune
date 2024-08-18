@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fortune/src/features/seo/widgets/app_link.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../generated/flutter_gen/assets.gen.dart';
@@ -51,10 +52,14 @@ class FooterLinks extends StatelessWidget {
       runSpacing: 4,
       spacing: 4,
       children: [
-        FooterLink(
-          child: Assets.icons.furitshopAppIcon.image(width: 24, height: 24),
-          onPressed: () => launchUrl(
-            Uri.parse('https://fruitshop.app'),
+        AppLink(
+          anchor: 'Fruitshop',
+          href: 'https://fruitshop.app',
+          child: FooterLink(
+            child: Assets.icons.furitshopAppIcon.image(width: 24, height: 24),
+            onPressed: () => launchUrl(
+              Uri.parse('https://fruitshop.app'),
+            ),
           ),
         ),
         ContactEmail(),
@@ -77,10 +82,14 @@ class GitHub extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FooterLink(
-      text: 'GitHub',
-      onPressed: () => launchUrl(
-        Uri.parse('https://github.com/ska2519'),
+    return AppLink(
+      anchor: 'GitHub',
+      href: 'https://github.com/ska2519',
+      child: FooterLink(
+        text: 'GitHub',
+        onPressed: () => launchUrl(
+          Uri.parse('https://github.com/ska2519'),
+        ),
       ),
     );
   }
@@ -91,12 +100,16 @@ class ContactEmail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FooterLink(
-      text: 'Contact Email',
-      onPressed: () => launchUrl(
-        Uri(
-          scheme: 'mailto',
-          path: 'ska2519@gamil.com',
+    return AppLink(
+      anchor: 'Contact Email',
+      href: 'mailto:ska2519@gamil.com',
+      child: FooterLink(
+        text: 'Contact Email',
+        onPressed: () => launchUrl(
+          Uri(
+            scheme: 'mailto',
+            path: 'ska2519@gamil.com',
+          ),
         ),
       ),
     );
