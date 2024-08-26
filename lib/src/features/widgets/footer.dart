@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fortune/src/features/seo/widgets/app_link.dart';
+import 'package:fortune/generated/flutter_gen/assets.gen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../generated/flutter_gen/assets.gen.dart';
+import '../../constants/app_sizes.dart';
+import '../seo/widgets/app_link.dart';
 
 class Footer extends StatelessWidget {
   const Footer({super.key});
@@ -12,24 +13,26 @@ class Footer extends StatelessWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Divider(),
-          // gapH64,
-          // const AppLogo(),
-          // gapH8,
-          // Text(
-          //   'Copyright Fruitshop All Rights Reserved.',
-          //   style: textTheme.labelMedium!.copyWith(
-          //     color: theme.hintColor,
-          //   ),
-          // ),
-          // gapH40,
-
+          gapH8,
+          Row(
+            children: [
+              Fruitshop(),
+              gapW8,
+              Text(
+                'Copyright © 2021 fruitshop',
+                textAlign: TextAlign.center,
+                style: textTheme.labelMedium!.copyWith(),
+              ),
+            ],
+          ),
+          gapH16,
           const FooterLinks(),
-          const SizedBox(height: 24),
+          gapH48,
         ],
       ),
     );
@@ -39,40 +42,44 @@ class Footer extends StatelessWidget {
 class FooterLinks extends StatelessWidget {
   const FooterLinks({super.key});
 
+  String? encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map((e) =>
+            '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .join('&');
+  }
+
   @override
   Widget build(BuildContext context) {
-    String? encodeQueryParameters(Map<String, String> params) {
-      return params.entries
-          .map((e) =>
-              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
-          .join('&');
-    }
-
-    return Wrap(
-      runSpacing: 4,
-      spacing: 4,
+    return const Wrap(
+      runSpacing: 16,
+      spacing: 16,
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        AppLink(
-          anchor: 'Fruitshop',
-          href: 'https://fruitshop.app',
-          child: FooterLink(
-            child: Assets.icons.furitshopAppIcon.image(width: 24, height: 24),
-            onPressed: () => launchUrl(
-              Uri.parse('https://fruitshop.app'),
-            ),
-          ),
-        ),
         ContactEmail(),
-        // FooterLink(text: 'Twitter'),
-        // SizedBox(width: 32),
-        // FooterLink(text: 'Slack'),
-        // SizedBox(width: 32),
         GitHub(),
-        // SizedBox(width: 32),
-        // FooterLink(text: 'RSS'),
-        // SizedBox(width: 32),
-        // FooterLink(text: 'Meta'),
+        LinkedIn(),
+        KakaoOpenChat(),
       ],
+    );
+  }
+}
+
+class Fruitshop extends StatelessWidget {
+  const Fruitshop({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AppLink(
+      anchor: 'fruitshop',
+      href: 'https://fruitshop.app',
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () => launchUrl(
+          Uri.parse('https://fruitshop.app'),
+        ),
+        child: Assets.icons.furitshopAppIcon.image(height: 24),
+      ),
     );
   }
 }
@@ -85,11 +92,50 @@ class GitHub extends StatelessWidget {
     return AppLink(
       anchor: 'GitHub',
       href: 'https://github.com/ska2519',
-      child: FooterLink(
-        text: 'GitHub',
-        onPressed: () => launchUrl(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () => launchUrl(
           Uri.parse('https://github.com/ska2519'),
         ),
+        child: Assets.icons.githubMark.svg(height: 24),
+      ),
+    );
+  }
+}
+
+class KakaoOpenChat extends StatelessWidget {
+  const KakaoOpenChat({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AppLink(
+      anchor: 'KakaoTalk Open Chat',
+      href: 'https://open.kakao.com/o/sapBuEKg',
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () => launchUrl(
+          Uri.parse('https://open.kakao.com/o/sapBuEKg'),
+        ),
+        child: Assets.icons.kakao.svg(height: 32),
+      ),
+    );
+  }
+}
+
+class LinkedIn extends StatelessWidget {
+  const LinkedIn({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AppLink(
+      anchor: 'Linked in Profile',
+      href: 'https://www.linkedin.com/in/ska2519',
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () => launchUrl(
+          Uri.parse('https://www.linkedin.com/in/ska2519'),
+        ),
+        child: Assets.icons.iconLinkedin.svg(height: 24),
       ),
     );
   }
@@ -101,10 +147,10 @@ class ContactEmail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppLink(
-      anchor: 'Contact Email',
+      anchor: 'Contact email',
       href: 'mailto:ska2519@gamil.com',
       child: FooterLink(
-        text: 'Contact Email',
+        text: 'Contact @',
         onPressed: () => launchUrl(
           Uri(
             scheme: 'mailto',
@@ -117,9 +163,8 @@ class ContactEmail extends StatelessWidget {
 }
 
 class FooterLink extends StatelessWidget {
-  const FooterLink({super.key, this.text, this.onPressed, this.child});
-  final String? text;
-  final Widget? child;
+  const FooterLink({super.key, required this.text, this.onPressed});
+  final String text;
   final VoidCallback? onPressed;
 
   @override
@@ -128,16 +173,14 @@ class FooterLink extends StatelessWidget {
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
       ),
-      child: child != null
-          ? child!
-          : Text(
-              text ?? '',
-              style: textTheme.labelMedium!.copyWith(
-                color: Theme.of(context).hintColor,
-              ),
+      child: Text(
+        text,
+        style: textTheme.labelMedium!.copyWith(
+            // color: Theme.of(context).hintColor,
             ),
+      ),
     );
   }
 }

@@ -108,23 +108,18 @@ Your task is to:
    * Recommend 5 promising future jobs that are suitable for the facial expressions, with detailed reasons.
 4. The response is always translated to the language code: ${languageCode}.
 
-**Example response for an image with a face:**
 
-{"physiognomy":"
-• Forehead: The forehead appears to be of average width and height, with no prominent features. This suggests a balanced and composed nature. The forehead is relatively smooth and lacks pronounced lines, potentially indicating a youthful or easygoing personality.
-
-• Eyebrows: The eyebrows are well-defined and slightly arched, hinting at a thoughtful and analytical disposition. They are not overly pronounced, indicating a calm personality. The distance between the eyebrows appears to be a normal width, indicating a reasonable sense of composure.
-
-• Eyes: The eyes are almond-shaped with a gentle gaze, showcasing a receptive and considerate personality. The clear, sharp focus suggests intelligence and focus. The distance between the eyes is balanced, suggesting good communication and social skills.
-
-• Nose: The nose appears straight and refined, possibly with a slight upturn at the tip, suggesting ambition and drive. The bridge of the nose is relatively straight, indicating an orderly and methodical nature. The nose isn't exceptionally large or small, which points towards a harmonious personality.
-
-• Mouth: The mouth appears to be slightly curved upwards, suggesting a pleasant demeanor and a tendency towards optimism. The lips are of average thickness, implying a balance between intellect and emotion. The corners of the mouth suggest a pleasant, but slightly reserved, disposition.
-
-• Chin: The chin is well-defined and slightly rounded, indicating resilience and perseverance. The chin isn't exceptionally prominent or receding, suggesting a sense of balance in dealing with challenges and pressures.
-
-• Overall: The face conveys a sense of composure, intelligence, and focus.  The individual appears calm, thoughtful, and perhaps slightly reserved. There are hints of ambition and drive, along with a genuine warmth and understanding in their expression.
-",
+**Example Json response data for an image with a face:**
+{
+  "physiognomy":```
+  • Forehead: The forehead appears to be of average width and height, with no prominent features.\This suggests a balanced and composed nature. The forehead is relatively smooth and lacks pronounced lines, potentially indicating a youthful or easygoing personality.\\n\n
+  • Eyebrows: The eyebrows are well-defined and slightly arched, hinting at a thoughtful and analytical disposition. They are not overly pronounced, indicating a calm personality. The distance between the eyebrows appears to be a normal width, indicating a reasonable sense of composure.\\n\n
+  • Eyes: The eyes are almond-shaped with a gentle gaze, showcasing a receptive and considerate personality. The clear, sharp focus suggests intelligence and focus. The distance between the eyes is balanced, suggesting good communication and social skills.\\n\n
+  • Nose: The nose appears straight and refined, possibly with a slight upturn at the tip, suggesting ambition and drive. The bridge of the nose is relatively straight, indicating an orderly and methodical nature. The nose isn't exceptionally large or small, which points towards a harmonious personality.\\n\n
+  • Mouth: The mouth appears to be slightly curved upwards, suggesting a pleasant demeanor and a tendency towards optimism. The lips are of average thickness, implying a balance between intellect and emotion. The corners of the mouth suggest a pleasant, but slightly reserved, disposition.\\n\n
+  • Chin: The chin is well-defined and slightly rounded, indicating resilience and perseverance. The chin isn't exceptionally prominent or receding, suggesting a sense of balance in dealing with challenges and pressures.\\n\n
+  • Overall: The face conveys a sense of composure, intelligence, and focus.  The individual appears calm, thoughtful, and perhaps slightly reserved. There are hints of ambition and drive, along with a genuine warmth and understanding in their expression.
+  ```,
   "difficulties": [
     {
       "level": 1,

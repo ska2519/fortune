@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fortune/src/features/payment/presentation/themes.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Url to the buy me a coffee website
@@ -15,7 +14,7 @@ class BuyMeACoffeeButton extends StatelessWidget {
   const BuyMeACoffeeButton({
     super.key,
     String this.sponsorID = 'ska2519',
-    String this.customText = "Buy me a coffee",
+    String this.customText = 'Support Face Reading x 10 times',
     this.textStyle,
     this.backgroundColor,
     this.theme,
@@ -70,6 +69,7 @@ class BuyMeACoffeeButton extends StatelessWidget {
   final bool isNewTab;
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     var backgroundColor = this.backgroundColor;
     final textStyle = this.textStyle;
     final customText = this.customText;
@@ -116,12 +116,10 @@ class BuyMeACoffeeButton extends StatelessWidget {
                         customText,
                         textAlign: TextAlign.center,
                         style: textStyle ??
-                            GoogleFonts.cookie(
-                              color: theme == null
-                                  ? Colors.white
-                                  : theme!.textColor,
-                              fontSize: 28.0,
-                              letterSpacing: 0.6,
+                            textTheme.labelMedium!.copyWith(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
                       ),
                     ),

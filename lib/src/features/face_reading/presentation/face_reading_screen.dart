@@ -1,15 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fortune/src/common_widgets/responsive_center.dart';
 import 'package:fortune/src/constants/gradient.dart';
-import 'package:fortune/src/features/payment/presentation/buy_me_a_coffee_button.dart';
 import 'package:fortune/src/features/face_reading/domain/face_reading.dart';
+import 'package:fortune/src/features/payment/presentation/buy_me_a_coffee_button.dart';
+import 'package:fortune/src/features/payment/presentation/support_screen.dart';
 import 'package:fortune/src/features/widgets/app_bar_title.dart';
 import 'package:fortune/src/features/widgets/footer.dart';
 import 'package:fortune/src/localization/data/locale_notifier.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:markdown_widget/markdown_widget.dart';
+import 'package:share_plus/share_plus.dart';
 
 class FaceReadingScreen extends ConsumerStatefulWidget {
   const FaceReadingScreen({super.key, required this.faceReading});
@@ -31,6 +34,8 @@ class _faceReadingScreenState extends ConsumerState<FaceReadingScreen> {
     promisingJobs.shuffle();
     super.initState();
   }
+
+  var promisingJobEndIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +67,7 @@ class _faceReadingScreenState extends ConsumerState<FaceReadingScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 24),
+                  SizedBox(height: 40),
                   Consumer(
                     builder: (context, ref, child) {
                       final translatedText =
@@ -89,10 +94,10 @@ class _faceReadingScreenState extends ConsumerState<FaceReadingScreen> {
                       );
                     },
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 16),
                   Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(16.0),
                       child: MarkdownWidget(
                         data: faceReading.physiognomy,
                         selectable: true,
@@ -190,7 +195,7 @@ class _faceReadingScreenState extends ConsumerState<FaceReadingScreen> {
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
-                            child: Text('Show more'),
+                            child: Text('Show my suitable career'),
                           ),
                         )
                       : Column(
@@ -199,31 +204,29 @@ class _faceReadingScreenState extends ConsumerState<FaceReadingScreen> {
                               builder: (context, ref, child) {
                                 final translatedText = ref.watch(
                                     translatedTextProvider(
-                                        ' Your Face, Your Future Jobs:'));
+                                        promisingJobEndIndex > 1
+                                            ? 'Your Future Careers'
+                                            : 'Your Future Career'));
                                 return translatedText.when(
                                   data: (text) => Text(
                                     text,
-                                    style: textTheme.headlineMedium!.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                    style: textTheme.headlineMedium!.copyWith(),
                                   ),
                                   loading: () => Text(
                                     '',
-                                    style: textTheme.headlineMedium!.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                    style: textTheme.headlineMedium!.copyWith(),
                                   ),
                                   error: (e, st) => Text(
                                     '',
-                                    style: textTheme.headlineMedium!.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                    style: textTheme.headlineMedium!.copyWith(),
                                   ),
                                 );
                               },
                             ),
                             SizedBox(height: 24),
-                            ...promisingJobs.sublist(0, 1).map(
+                            ...promisingJobs
+                                .sublist(0, promisingJobEndIndex)
+                                .map(
                                   (job) => Card(
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -256,38 +259,79 @@ class _faceReadingScreenState extends ConsumerState<FaceReadingScreen> {
                         ),
 
                   SizedBox(height: 60),
-                  // ElevatedButton(
-                  //   onPressed: () async {
-                  //     final result = await Share.share(
-                  //         'Find the secret hidden in your face! https://fortune.fruitshop.app');
 
-                  //     if (result.status == ShareResultStatus.success) {
-                  //       print('Thank you for sharing my website!');
-                  //     }
-                  //   },
-                  //   child: Row(
-                  //     mainAxisSize: MainAxisSize.min,
-                  //     children: [
-                  //       Icon(Icons.face),
-                  //       SizedBox(width: 8),
-                  //       Text('Share with friends'),
-                  //     ],
-                  //   ),
-                  // ),
-                  Footer(),
+                  if (isExpanded && promisingJobEndIndex < 2)
+                    Builder(
+                      builder: (BuildContext context) {
+                        final text = """
+This might be my career!
+
+${promisingJobs.first.emoji} ${promisingJobs.first.job}
+
+${promisingJobs.first.reason}
+
+Find the secret hidden in your face!
+https://fortune.fruitshop.app""";
+                        return ElevatedButton.icon(
+                          onPressed: () =>
+                              Clipboard.setData(ClipboardData(text: text)).then(
+                            (value) {
+                              final snackBar = SnackBar(
+                                content: Text('Copied to Clipboard'),
+                                action: SnackBarAction(
+                                  label: 'close',
+                                  onPressed: () {
+                                    ScaffoldMessenger.of(context)
+                                        .hideCurrentSnackBar();
+                                  },
+                                ),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  snackBar); // -> show a notification
+                              setState(() {
+                                promisingJobEndIndex = 2;
+                              });
+                            },
+                          ),
+                          icon: Icon(Ionicons.copy_outline),
+                          label: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            child: Text(
+                              'Share & Find New Career',
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  SizedBox(height: 32),
+                  Divider(),
+                  SizedBox(height: 16),
+                  SupportScreen(),
+                  SizedBox(height: 40),
                   BuyMeACoffeeButton(
                     shopID: kReleaseMode ? '230822' : '230812',
-                    customText: 'Support Face Reading x 10',
-                    textStyle: GoogleFonts.poppins(
-                      fontSize: 20,
-                    ),
                   ),
-                  SizedBox(height: 40),
+                  SizedBox(height: 16),
+                  Footer(),
                 ],
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  SnackBar getResultSnackBar(ShareResult result) {
+    return SnackBar(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Share result: ${result.status}"),
+          if (result.status == ShareResultStatus.success)
+            Text("Shared to: ${result.raw}")
+        ],
       ),
     );
   }

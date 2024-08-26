@@ -22,9 +22,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fortune/generated/flutter_gen/assets.gen.dart';
-import 'package:fortune/src/app.dart';
 import 'package:fortune/src/common_widgets/responsive_center.dart';
 import 'package:fortune/src/common_widgets/responsive_two_column_layout.dart';
+import 'package:fortune/src/constants/app_sizes.dart';
 import 'package:fortune/src/constants/breakpoints.dart';
 import 'package:fortune/src/constants/gradient.dart';
 import 'package:fortune/src/features/face_reading/data/image_upload_repository.dart';
@@ -32,6 +32,7 @@ import 'package:fortune/src/features/face_reading/data/statistics_repository.dar
 import 'package:fortune/src/features/face_reading/domain/face_reading.dart';
 import 'package:fortune/src/features/face_reading/domain/prompts.dart';
 import 'package:fortune/src/features/payment/presentation/buy_me_a_coffee_button.dart';
+import 'package:fortune/src/features/payment/presentation/support_screen.dart';
 import 'package:fortune/src/features/seo/widgets/app_head.dart';
 import 'package:fortune/src/features/seo/widgets/app_text.dart';
 import 'package:fortune/src/features/widgets/app_bar_title.dart';
@@ -39,8 +40,8 @@ import 'package:fortune/src/features/widgets/footer.dart';
 import 'package:fortune/src/features/widgets/lsd_image_animation.dart';
 import 'package:fortune/src/localization/data/locale_notifier.dart';
 import 'package:fortune/src/localization/data/most_spoken_languages.dart';
+import 'package:fortune/src/router/router.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:markdown_widget/widget/markdown.dart';
@@ -146,23 +147,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           allowMultiple: false,
         );
         if (filePickerResult != null) {
-          var bytes = filePickerResult.files.first.bytes!;
-          bytes = await ImageUploadRepository().compressImage(bytes);
+          final bytes = filePickerResult.files.first.bytes!;
+          final compressImageBytes =
+              await ImageUploadRepository().compressImage(bytes);
 
           setState(() {
             _loading = true;
-            image = Image.memory(bytes, fit: BoxFit.contain);
+            image = Image.memory(compressImageBytes, fit: BoxFit.contain);
           });
           final content = [
             Content.multi([
-              DataPart('image/jpeg', bytes),
+              DataPart('image/jpeg', compressImageBytes),
               TextPart(prompt(ref.read(localeProvider).locale.languageCode)),
             ]),
           ];
 
           var response = await _model.generateContent(content);
           var text = response.text;
-
+          debugPrint('text: $text');
           if (text != null) {
             String removeUnnecessaryCharacters(String jsonText) {
               // JSON 시작 부분의 역따옴표와 '```json' 문자열을 제거합니다.
@@ -171,7 +173,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   .replaceAll(r'`', '');
             }
 
-            debugPrint('text: $text');
             String cleanedJsonString = removeUnnecessaryCharacters(text);
             final cleanedJson = json.decode(cleanedJsonString);
             if (cleanedJson['error'] != null) {
@@ -179,9 +180,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               return;
             }
 
-            var faceReading = FaceReading.fromJson(cleanedJson);
-            faceReading = faceReading.copyWith(
-              imageBytes: bytes,
+            final faceReading = FaceReading.fromJson(cleanedJson).copyWith(
+              imageBytes: compressImageBytes,
             );
 
             if (faceReading.difficulties.isNotEmpty) {
@@ -199,6 +199,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           }
         }
       } catch (e) {
+        if (e.toString().contains('Quota exceeded')) {
+          _showError('Quota exceeded - Gemini-1.5-flash');
+          return;
+        }
         _showError(e.toString());
       } finally {
         setState(() {
@@ -213,6 +217,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         title: 'Face Reading AI',
         description:
             'Discover your potential based on the unique features of your face. Explore the deeper meaning behind your facial features. Face Reading AI offers a unique perspective on self-discovery.',
+        author: 'sk@',
         child: Scaffold(
           endDrawer: Drawer(
             width: 120,
@@ -305,244 +310,79 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                     SizedBox(height: 60),
 
-                    ResponsiveTwoColumnLayout(
-                      spacing: 80,
-                      startFlex: 1,
-                      endFlex: 1,
-                      startContent: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Flexible(
-                            child: Consumer(
-                              builder: (context, ref, child) {
-                                final translatedText = ref.watch(
+                    Consumer(builder: (context, ref, child) {
+                      final records = ref.watch(recordsStreamProvider).value;
+                      final faceReadingTranslatedText = ref.watch(
+                          translatedTextProvider(
+                              'People checked their Face Reading and identified suitable Careers'));
+                      final remainingTranslatedText = ref.watch(
+                          translatedTextProvider('Remaining opportunity : '));
+                      final translatedText = ref.watch(
+                          translatedTextProvider('Last Face Reading : '));
+                      return ResponsiveTwoColumnLayout(
+                        spacing: 80,
+                        startFlex: 1,
+                        endFlex: 1,
+                        startContent: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Flexible(
+                              child: Consumer(
+                                builder: (context, ref, child) {
+                                  final translatedText = ref.watch(
+                                      translatedTextProvider(
+                                          'Unlock Your Future with Face Reading AI'));
+                                  return translatedText.when(
+                                    data: (text) => AppText(
+                                      text,
+                                      tagStyle: TextTagStyle.h1,
+                                      style: textTheme.displaySmall,
+                                    ),
+                                    loading: () => SizedBox(
+                                      height: 1400,
+                                      width: 700,
+                                    ),
+                                    error: (e, st) => Text(''),
+                                  );
+                                },
+                              ),
+                            ),
+                            SizedBox(height: 60),
+                            Flexible(
+                              child: Consumer(
+                                builder: (context, ref, child) {
+                                  final translatedText = ref.watch(
                                     translatedTextProvider(
-                                        'Unlock Your Future with Face Reading AI'));
-                                return translatedText.when(
-                                  data: (text) => AppText(
-                                    text,
-                                    tagStyle: TextTagStyle.h2,
-                                    style: textTheme.displaySmall,
-                                  ),
-                                  loading: () => SizedBox(
-                                    height: 1400,
-                                    width: 700,
-                                  ),
-                                  error: (e, st) => Text(''),
-                                );
-                              },
+                                      "Discover your potential based on the unique features of your face.\nExplore the deeper meaning behind your facial features.\nFace Reading AI offers a unique perspective on self-discovery.",
+                                    ),
+                                  );
+                                  return translatedText.when(
+                                    data: (text) => AppText(
+                                      tagStyle: TextTagStyle.h2,
+                                      text,
+                                      style: textTheme.titleMedium!.copyWith(
+                                        height: 1.6,
+                                        color: Colors.grey[800],
+                                      ),
+                                    ),
+                                    loading: () => Text(''),
+                                    error: (e, st) => Text(''),
+                                  );
+                                },
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 60),
-                          Flexible(
-                            child: Consumer(
-                              builder: (context, ref, child) {
-                                final translatedText = ref.watch(
-                                  translatedTextProvider(
-                                    "Discover your potential based on the unique features of your face.\nExplore the deeper meaning behind your facial features.\nFace Reading AI offers a unique perspective on self-discovery.",
-                                  ),
-                                );
-                                return translatedText.when(
-                                  data: (text) => AppText(
-                                    tagStyle: TextTagStyle.h3,
-                                    text,
-                                    style: textTheme.titleMedium!.copyWith(
-                                      height: 1.6,
-                                      color: Colors.grey[800],
-                                    ),
-                                  ),
-                                  loading: () => Text(''),
-                                  error: (e, st) => Text(''),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      endContent: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          GridView(
-                            shrinkWrap: true,
-                            physics: ClampingScrollPhysics(),
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              childAspectRatio: 3 / 4,
-                              crossAxisSpacing: 8.0,
-                              mainAxisSpacing: 8.0,
-                            ),
-                            children: faces.map((face) {
-                              return ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
-                                child: face.image(
-                                  fit: BoxFit.cover,
-                                  alignment: Alignment.center,
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                          SizedBox(height: 32),
-                          if (image != null)
-                            Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(32.0),
-                                  child: BackdropFilter(
-                                    filter: ui.ImageFilter.blur(
-                                      sigmaX: 8,
-                                      sigmaY: 8,
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(16),
-                                      child: LSDImageAnimation(image: image!),
-                                    ),
-                                  ),
-                                ),
-                                SpinKitRipple(
-                                  size: MediaQuery.of(context).size.width / 2,
-                                  itemBuilder: (context, index) => Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(500),
-                                      color: index.isEven
-                                          ? Colors.deepPurpleAccent
-                                              .withOpacity(0.3)
-                                          : Colors.yellowAccent
-                                              .withOpacity(0.3),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          SizedBox(height: 16),
-                          Consumer(
-                            builder: (context, ref, child) {
-                              final records =
-                                  ref.watch(recordsStreamProvider).value;
-                              final remainingTranslatedText = ref.watch(
-                                  translatedTextProvider(
-                                      'Remaining opportunity : '));
-                              final faceReadingTranslatedText = ref.watch(
-                                  translatedTextProvider(
-                                      'People checked their Face Reading and identified suitable jobs.'));
-                              final translatedText = ref.watch(
-                                  translatedTextProvider(
-                                      'Last Face Reading : '));
-
-                              return Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  ElevatedButton.icon(
-                                    onPressed: !_loading
-                                        ? () async {
-                                            await _submitImage();
-                                          }
-                                        : null,
-                                    icon: _loading
-                                        ? null
-                                        : Icon(Icons.camera_alt_rounded),
-                                    label: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 16.0),
-                                      child: _loading
-                                          ? Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                LoadingAnimationWidget
-                                                    .dotsTriangle(
-                                                  color:
-                                                      Colors.deepPurpleAccent,
-                                                  size: 32,
-                                                ),
-                                                SizedBox(width: 16),
-                                                Consumer(
-                                                  builder:
-                                                      (context, ref, child) {
-                                                    final translatedText = ref.watch(
-                                                        translatedTextProvider(
-                                                            'Analyzing face...🔮'));
-                                                    return translatedText.when(
-                                                      data: (text) =>
-                                                          Text(text),
-                                                      loading: () => Text(''),
-                                                      error: (e, st) =>
-                                                          Text(''),
-                                                    );
-                                                  },
-                                                )
-                                              ],
-                                            )
-                                          : records == null
-                                              ? Text('')
-                                              : Consumer(
-                                                  builder:
-                                                      (context, ref, child) {
-                                                    final translatedText = ref.watch(
-                                                        translatedTextProvider(
-                                                            'Find your job of fate with Face Reading'));
-
-                                                    return translatedText.when(
-                                                      data: (text) => AppText(
-                                                        text,
-                                                        tagStyle:
-                                                            TextTagStyle.h4,
-                                                      ),
-                                                      loading: () => Text(''),
-                                                      error: (e, st) =>
-                                                          Text(''),
-                                                    );
-                                                  },
-                                                ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 4),
-                                  records == null
-                                      ? SizedBox.shrink()
-                                      : Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                              '${remainingTranslatedText.value} ${records.remainingFaceReadings}',
-                                              style: textTheme.labelMedium!
-                                                  .copyWith(
-                                                color:
-                                                    records.remainingFaceReadings >
-                                                            0
-                                                        ? Colors
-                                                            .deepPurpleAccent
-                                                        : Colors.redAccent,
-                                              ),
-                                            ),
-                                            SizedBox(width: 4),
-                                            Tooltip(
-                                              message: ref
-                                                          .watch(localeProvider)
-                                                          .locale ==
-                                                      'kr'
-                                                  ? '매 시간 10회의 무료 사용 가능\n하단의 Buy me a coffee 충전 시 공용 횟수 10회 추가'
-                                                  : '10 free uses per hour\nAdd 10 shared uses when support Face Reading with Buy me a coffee below',
-                                              child: Icon(
-                                                Ionicons.help_circle_outline,
-                                                size: 16,
-                                                color:
-                                                    records.remainingFaceReadings >
-                                                            0
-                                                        ? Colors
-                                                            .deepPurpleAccent
-                                                        : Colors.redAccent,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                  SizedBox(height: 16),
-                                  records == null
-                                      ? SizedBox.shrink()
-                                      : Flexible(
+                            SizedBox(height: 80),
+                            records == null
+                                ? SizedBox(height: 80)
+                                : Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Card(
+                                        elevation: 0.1,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16),
                                           child: RichText(
                                             textAlign: TextAlign.center,
                                             text: TextSpan(
@@ -553,10 +393,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                       ' ',
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .labelLarge!
+                                                      .titleMedium!
                                                       .copyWith(
                                                         color: Colors
                                                             .deepPurpleAccent,
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                       ),
                                                 ),
                                                 TextSpan(
@@ -568,16 +410,214 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                           .value,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .labelLarge,
+                                                      .titleMedium!
+                                                      .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
                                                 ),
                                               ],
                                             ),
                                           ),
                                         ),
-                                  SizedBox(height: 8),
-                                  records == null
-                                      ? SizedBox.shrink()
-                                      : RichText(
+                                      ),
+                                      gapH4,
+                                      Consumer(
+                                        builder: (context, ref, child) {
+                                          final translatedText = ref.watch(
+                                              translatedTextProvider(
+                                                  'We do not store photo or personal information.'));
+                                          return translatedText.when(
+                                            data: (text) => Text(
+                                              text,
+                                              style: textTheme.labelMedium!
+                                                  .copyWith(
+                                                      color: Colors.redAccent),
+                                            ),
+                                            loading: () => Text(''),
+                                            error: (e, st) => Text(''),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                          ],
+                        ),
+                        endContent: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            GridView(
+                              shrinkWrap: true,
+                              physics: ClampingScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                childAspectRatio: 3 / 4,
+                                crossAxisSpacing: 8.0,
+                                mainAxisSpacing: 8.0,
+                              ),
+                              children: faces.map((face) {
+                                return ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: face.image(
+                                    fit: BoxFit.cover,
+                                    alignment: Alignment.center,
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                            SizedBox(height: 32),
+                            if (image != null)
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(32.0),
+                                    child: BackdropFilter(
+                                      filter: ui.ImageFilter.blur(
+                                        sigmaX: 8,
+                                        sigmaY: 8,
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: LSDImageAnimation(image: image!),
+                                      ),
+                                    ),
+                                  ),
+                                  SpinKitRipple(
+                                    size: MediaQuery.of(context).size.width / 2,
+                                    itemBuilder: (context, index) => Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(500),
+                                        color: index.isEven
+                                            ? Colors.deepPurpleAccent
+                                                .withOpacity(0.3)
+                                            : Colors.yellowAccent
+                                                .withOpacity(0.3),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            SizedBox(height: 16),
+                            records == null
+                                ? SizedBox.shrink()
+                                : Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      ElevatedButton.icon(
+                                        onPressed: _loading ||
+                                                records.remainingFaceReadings <=
+                                                    0
+                                            ? null
+                                            : () async {
+                                                await _submitImage();
+                                              },
+                                        icon: _loading
+                                            ? null
+                                            : Icon(Icons.camera_alt_rounded),
+                                        label: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 16.0,
+                                          ),
+                                          child: _loading
+                                              ? Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    LoadingAnimationWidget
+                                                        .dotsTriangle(
+                                                      color: Colors
+                                                          .deepPurpleAccent,
+                                                      size: 32,
+                                                    ),
+                                                    SizedBox(width: 16),
+                                                    Consumer(
+                                                      builder: (context, ref,
+                                                          child) {
+                                                        final translatedText =
+                                                            ref.watch(
+                                                                translatedTextProvider(
+                                                                    'Analyzing face...🔮'));
+                                                        return translatedText
+                                                            .when(
+                                                          data: (text) =>
+                                                              Text(text),
+                                                          loading: () =>
+                                                              Text(''),
+                                                          error: (e, st) =>
+                                                              Text(''),
+                                                        );
+                                                      },
+                                                    )
+                                                  ],
+                                                )
+                                              : Consumer(
+                                                  builder:
+                                                      (context, ref, child) {
+                                                    final translatedText = ref.watch(
+                                                        translatedTextProvider(
+                                                            'Find Your Careers of Fate with Face Reading'));
+
+                                                    return translatedText.when(
+                                                      data: (text) => AppText(
+                                                        text,
+                                                        tagStyle:
+                                                            TextTagStyle.h3,
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                      loading: () => Text(''),
+                                                      error: (e, st) =>
+                                                          Text(''),
+                                                    );
+                                                  },
+                                                ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            '${remainingTranslatedText.value} ${records.remainingFaceReadings}',
+                                            style:
+                                                textTheme.labelMedium!.copyWith(
+                                              color:
+                                                  records.remainingFaceReadings >
+                                                          0
+                                                      ? Colors.deepPurpleAccent
+                                                      : Colors.redAccent,
+                                            ),
+                                          ),
+                                          SizedBox(width: 4),
+                                          Tooltip(
+                                            message: ref
+                                                        .watch(localeProvider)
+                                                        .locale ==
+                                                    'kr'
+                                                ? '매 시간 10회의 무료 사용 가능\n하단의 Buy me a coffee 충전 시 공용 횟수 10회 추가'
+                                                : '10 free uses per hour\nAdd 10 shared uses when support Face Reading with Buy me a coffee below',
+                                            child: Icon(
+                                              Ionicons.help_circle_outline,
+                                              size: 16,
+                                              color:
+                                                  records.remainingFaceReadings >
+                                                          0
+                                                      ? Colors.deepPurpleAccent
+                                                      : Colors.redAccent,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 8),
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: RichText(
                                           textAlign: TextAlign.right,
                                           text: TextSpan(
                                             children: [
@@ -607,35 +647,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                             ],
                                           ),
                                         ),
-                                ],
-                              );
-                            },
-                          ),
-                          SizedBox(height: 60),
-                        ],
-                      ),
-                    ),
+                                      ),
+                                    ],
+                                  ),
+                            SizedBox(height: 60),
+                          ],
+                        ),
+                      );
+                    }),
 
                     SizedBox(
                         height: MediaQuery.of(context).size.width >
                                 Breakpoint.tablet
-                            ? 140
-                            : 80),
-                    Consumer(
-                      builder: (context, ref, child) {
-                        final translatedText = ref.watch(translatedTextProvider(
-                            'If blocked due to policy. Please try again.'));
-                        return translatedText.when(
-                          data: (text) => Text(
-                            text,
-                            style: textTheme.labelSmall!
-                                .copyWith(color: Colors.redAccent),
-                          ),
-                          loading: () => Text(''),
-                          error: (e, st) => Text(''),
-                        );
-                      },
-                    ),
+                            ? 100
+                            : 70),
+
+                    SupportScreen(),
+
                     SizedBox(height: 32),
                     Divider(),
 
@@ -644,17 +672,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       selectable: true,
                       shrinkWrap: true,
                     ),
-
-                    SizedBox(height: 80),
-                    Footer(),
+                    SizedBox(height: 40),
                     BuyMeACoffeeButton(
                       shopID: kReleaseMode ? '230822' : '230812',
-                      customText: 'Support Face Reading x 10',
-                      textStyle: GoogleFonts.poppins(
-                        fontSize: 20,
-                      ),
                     ),
-                    SizedBox(height: 40),
+                    SizedBox(height: 16),
+
+                    Footer(),
+
                     // ElevatedButton(
                     //   onPressed: () async {
                     //     ref.read(statisticsRepositoryProvider).incrementCount();

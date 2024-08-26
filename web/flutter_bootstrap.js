@@ -25,7 +25,7 @@
             // // Run the Flutter app.
             // await appRunner.runApp();
     
-            // Add a fade-in effect to the Flutter view element.
-            document.querySelector("flutter-view").classList.add("fade-in");
+            //! Add a fade-in effect to the Flutter view element. // 사용안함 -  SEO 세팅 시 SEO 가 보이게 됨
+            // document.querySelector("flutter-view").classList.add("fade-in");
         }
     });

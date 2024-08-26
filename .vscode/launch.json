@@ -12,8 +12,8 @@
       "args": [
         "--target",
         "lib/main.dart",
-        // "--web-renderer html",
-        "--web-renderer canvaskit",
+        "--web-renderer html",
+        "--web-port=5000",
         "-v",
       ]
     },
@@ -25,6 +25,8 @@
       "args": [
         "--target",
         "lib/main_fakes.dart",
+        "--web-renderer html",
+        "--web-port=5000",
         "-v",
       ]
     },

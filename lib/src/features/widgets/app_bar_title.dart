@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fortune/src/app.dart';
 import 'package:fortune/src/localization/data/locale_notifier.dart';
+import 'package:fortune/src/router/router.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../generated/flutter_gen/assets.gen.dart';

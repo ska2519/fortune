@@ -6,11 +6,14 @@ class AppText extends StatelessWidget {
   final TextTagStyle? tagStyle;
 
   final TextStyle? style;
+  
+  final TextAlign? textAlign;
 
   const AppText(
     this.text, {
     this.style,
     this.tagStyle,
+    this.textAlign,
     super.key,
   });
 
@@ -22,6 +25,7 @@ class AppText extends StatelessWidget {
       child: Text(
         text,
         style: style,
+        textAlign: textAlign,
       ),
     );
   }
