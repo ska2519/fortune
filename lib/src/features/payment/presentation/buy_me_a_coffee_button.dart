@@ -14,7 +14,7 @@ class BuyMeACoffeeButton extends StatelessWidget {
   const BuyMeACoffeeButton({
     super.key,
     String this.sponsorID = 'ska2519',
-    String this.customText = 'Support Face Reading x 10 times',
+    String this.customText = 'Support Face Reading opportunity x 10',
     this.textStyle,
     this.backgroundColor,
     this.theme,
@@ -100,7 +100,7 @@ class BuyMeACoffeeButton extends StatelessWidget {
         );
       },
       child: Container(
-        padding: padding ?? EdgeInsets.symmetric(vertical: 8),
+        padding: padding ?? EdgeInsets.symmetric(vertical: 4),
         decoration: const BoxDecoration(),
         child: _isIconOnly || customText == null || customText.isEmpty
             ? iconWidget
@@ -116,8 +116,8 @@ class BuyMeACoffeeButton extends StatelessWidget {
                         customText,
                         textAlign: TextAlign.center,
                         style: textStyle ??
-                            textTheme.labelMedium!.copyWith(
-                              fontSize: 20,
+                            textTheme.bodyMedium!.copyWith(
+                              // fontSize: 20,
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),

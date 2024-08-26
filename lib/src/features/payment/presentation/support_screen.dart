@@ -85,7 +85,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                           title: Text(purchase.supporterName),
                           subtitle: Text(purchase.message),
                           trailing: Text(
-                            (purchase.quantity * 10).toString() + 'x',
+                            'x' + (purchase.quantity * 10).toString(),
                             style: textTheme.bodySmall!.copyWith(
                               fontWeight: FontWeight.w500,
                             ),
@@ -96,31 +96,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                   ],
                 ),
               );
-            }
-            // ListView.builder(
-            //   itemCount: purchases.length,
-            //   physics: ClampingScrollPhysics(),
-            //   shrinkWrap: true,
-            //   itemBuilder: (context, index) {
-            //     final purchase = purchases[index];
-            //     return Card(
-            //       elevation: 0.5,
-            //       child: ListTile(
-            //         dense: true,
-            //         visualDensity: VisualDensity.compact,
-            //         title: Text(purchase.supporterName),
-            //         subtitle: Text(purchase.message),
-            //         trailing: Text(
-            //           (purchase.quantity * 10).toString() + 'x',
-            //           style: textTheme.bodySmall!.copyWith(
-            //             fontWeight: FontWeight.w500,
-            //           ),
-            //         ),
-            //       ),
-            //     );
-            //   },
-            // ),
-            ),
+            }),
       ],
     );
   }

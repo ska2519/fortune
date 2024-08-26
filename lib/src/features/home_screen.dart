@@ -309,7 +309,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ],
                     ),
                     SizedBox(height: 60),
-
                     Consumer(builder: (context, ref, child) {
                       final records = ref.watch(recordsStreamProvider).value;
                       final faceReadingTranslatedText = ref.watch(
@@ -655,46 +654,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                       );
                     }),
-
                     SizedBox(
                         height: MediaQuery.of(context).size.width >
                                 Breakpoint.tablet
                             ? 100
                             : 70),
-
                     SupportScreen(),
-
+                    SizedBox(height: 16),
+                    BuyMeACoffeeButton(
+                      shopID: kReleaseMode ? '230822' : '230812',
+                    ),
                     SizedBox(height: 32),
                     Divider(),
-
                     MarkdownWidget(
                       data: faceReading,
                       selectable: true,
                       shrinkWrap: true,
                     ),
                     SizedBox(height: 40),
-                    BuyMeACoffeeButton(
-                      shopID: kReleaseMode ? '230822' : '230812',
-                    ),
-                    SizedBox(height: 16),
-
                     Footer(),
-
-                    // ElevatedButton(
-                    //   onPressed: () async {
-                    //     ref.read(statisticsRepositoryProvider).incrementCount();
-                    //     final count = await ref
-                    //         .read(statisticsRepositoryProvider)
-                    //         .getFaceReadingsCount();
-                    //     print('count: $count');
-                    //     // Navigator.push(
-                    //     //   context,
-                    //     //   MaterialPageRoute(builder: (context) => AdSenseWeb()),
-                    //     // );
-                    //   },
-                    //   child: Text('incrementCount'),
-                    // ),
-                    // SizedBox(height: 16),
                   ],
                 ),
               ),
