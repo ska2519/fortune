@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fortune/main.dart';
 import 'package:fortune/src/features/payment/presentation/themes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -14,7 +16,7 @@ class BuyMeACoffeeButton extends StatelessWidget {
   const BuyMeACoffeeButton({
     super.key,
     String this.sponsorID = 'ska2519',
-    String this.customText = 'Support Face Reading opportunity x 10',
+    String this.customText = 'Support Face Reading Opportunity x 10',
     this.textStyle,
     this.backgroundColor,
     this.theme,
@@ -98,6 +100,7 @@ class BuyMeACoffeeButton extends StatelessWidget {
           uri,
           webOnlyWindowName: isNewTab ? '_blank' : '_self',
         );
+        if (kReleaseMode) analytics.logEvent(name: 'click_buymeacoffee_button');
       },
       child: Container(
         padding: padding ?? EdgeInsets.symmetric(vertical: 4),

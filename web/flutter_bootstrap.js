@@ -1,12 +1,3 @@
-    /**
-    * This function creates a delay of 500 milliseconds.
-    *
-    * @returns {Promise} A Promise that resolves after the delay.
-    */
-    function addDelay() {
-        return new Promise((resolve) => setTimeout(resolve, 500));
-    }
-
     {{flutter_js}}
     {{flutter_build_config}}
 
@@ -19,13 +10,5 @@
             document.getElementById('anim_loading').style.display = 'none';
             appRunner.runApp();
             });;
-            // // Add a delay before running the app to create a smooth crossfade effect.
-            // await addDelay();
-    
-            // // Run the Flutter app.
-            // await appRunner.runApp();
-    
-            //! Add a fade-in effect to the Flutter view element. // 사용안함 -  SEO 세팅 시 SEO 가 보이게 됨
-            // document.querySelector("flutter-view").classList.add("fade-in");
         }
     });

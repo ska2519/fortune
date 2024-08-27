@@ -10,6 +10,7 @@ import 'package:fortune/src/app.dart';
 
 const reCAPTCHAsiteKey = '6LeoQxYqAAAAAKUGi7-laBmbQCosZLASZfMJbqWH';
 const debugToken = '4e7a1696-3be5-4462-8959-4cb247181f51';
+late final FirebaseAnalytics analytics;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +30,7 @@ void main() async {
     appleProvider:
         kReleaseMode ? AppleProvider.deviceCheck : AppleProvider.debug,
   );
-  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  analytics = FirebaseAnalytics.instance;
   if (kReleaseMode) analytics.logAppOpen();
 
   // MobileAds.instance.initialize();

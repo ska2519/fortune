@@ -46,6 +46,9 @@ final translatedTextProvider = FutureProvider.family<String, String>(
         if (text.contains('얼굴 독서는')) {
           text = text.replaceAll('얼굴 독서는', "관상은");
         }
+        if (text.contains('얼굴 독서로')) {
+          text = text.replaceAll('얼굴 독서로', "관상으로");
+        }
         if (text.contains('얼굴을')) {
           text = text.replaceAll('얼굴을', "관상을");
         }
@@ -76,9 +79,20 @@ final translatedTextProvider = FutureProvider.family<String, String>(
         if (text.contains('했습니다')) {
           text = text.replaceAll('했습니다', "했어요");
         }
-
         if (text.contains('경력을')) {
           text = text.replaceAll('경력을', "직업을");
+        }
+        if (text.contains('지지자')) {
+          text = text.replaceAll('지지자', "서포터");
+        }
+        if (text.contains('지원')) {
+          text = text.replaceAll('지원', "서포트 하기");
+        }
+        if (text.contains(
+            "'10 free uses per hour\n10 more uses per Buy me a coffee charge'")) {
+          text = text.replaceAll(
+              "'10 free uses per hour\n10 more uses per Buy me a coffee charge'",
+              '매 시간 10회의 무료 사용 가능\n하단의 Buy me a coffee 충전 시 공용 횟수 10회 추가');
         }
       }
       return text;

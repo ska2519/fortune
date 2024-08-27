@@ -2,11 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fortune/main.dart';
 import 'package:fortune/src/common_widgets/responsive_center.dart';
+import 'package:fortune/src/constants/app_sizes.dart';
 import 'package:fortune/src/constants/gradient.dart';
 import 'package:fortune/src/features/face_reading/domain/face_reading.dart';
-import 'package:fortune/src/features/payment/presentation/buy_me_a_coffee_button.dart';
 import 'package:fortune/src/features/payment/presentation/support_screen.dart';
+import 'package:fortune/src/features/payment/presentation/translated_buymeacoffee_button.dart';
 import 'package:fortune/src/features/widgets/app_bar_title.dart';
 import 'package:fortune/src/features/widgets/footer.dart';
 import 'package:fortune/src/localization/data/locale_notifier.dart';
@@ -53,12 +55,12 @@ class _faceReadingScreenState extends ConsumerState<FaceReadingScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 16),
+                  gapH16,
                   Align(
                     child: AppBarTitle(),
                     alignment: Alignment.centerLeft,
                   ),
-                  SizedBox(height: 24),
+                  gapH24,
                   Card(
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
@@ -67,7 +69,7 @@ class _faceReadingScreenState extends ConsumerState<FaceReadingScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 40),
+                  gapH40,
                   Consumer(
                     builder: (context, ref, child) {
                       final translatedText =
@@ -94,7 +96,7 @@ class _faceReadingScreenState extends ConsumerState<FaceReadingScreen> {
                       );
                     },
                   ),
-                  SizedBox(height: 16),
+                  gapH16,
                   Card(
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -105,7 +107,7 @@ class _faceReadingScreenState extends ConsumerState<FaceReadingScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 60),
+                  gapH64,
                   // Consumer(
                   //   builder: (context, ref, child) {
                   //     final translatedText = ref
@@ -132,7 +134,7 @@ class _faceReadingScreenState extends ConsumerState<FaceReadingScreen> {
                   //     );
                   //   },
                   // ),
-                  // SizedBox(height: 8),
+                  // gapH8,
                   // Consumer(
                   //   builder: (context, ref, child) {
                   //     final translatedText = ref.watch(translatedTextProvider(
@@ -153,7 +155,7 @@ class _faceReadingScreenState extends ConsumerState<FaceReadingScreen> {
                   //     );
                   //   },
                   // ),
-                  // SizedBox(height: 24),
+                  //  gapH24,
                   // ...physiognomy.difficulties.sublist(1, 4).map(
                   //       (difficulty) => Card(
                   //         child: Padding(
@@ -177,7 +179,7 @@ class _faceReadingScreenState extends ConsumerState<FaceReadingScreen> {
                   //             subtitle: Column(
                   //               crossAxisAlignment: CrossAxisAlignment.start,
                   //               children: [
-                  //                 SizedBox(height: 8),
+                  //                 gapH8,
                   //                 Text(difficulty.reason),
                   //               ],
                   //             ),
@@ -185,17 +187,20 @@ class _faceReadingScreenState extends ConsumerState<FaceReadingScreen> {
                   //         ),
                   //       ),
                   //     ),
-                  // SizedBox(height: 60),
+                  // gapH64,
                   !isExpanded
                       ? ElevatedButton(
                           onPressed: () {
                             setState(() {
                               isExpanded = true;
                             });
+                            if (kReleaseMode)
+                              analytics.logEvent(
+                                  name: 'Click Show My Suitable Career Button');
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
-                            child: Text('Show my suitable career'),
+                            child: Text('Show My Suitable Career'),
                           ),
                         )
                       : Column(
@@ -223,7 +228,7 @@ class _faceReadingScreenState extends ConsumerState<FaceReadingScreen> {
                                 );
                               },
                             ),
-                            SizedBox(height: 24),
+                            gapH24,
                             ...promisingJobs
                                 .sublist(0, promisingJobEndIndex)
                                 .map(
@@ -244,10 +249,10 @@ class _faceReadingScreenState extends ConsumerState<FaceReadingScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            SizedBox(height: 4),
+                                            gapH4,
                                             Text(
                                                 '📚⏳ ' + job.expertStudyPeriod),
-                                            SizedBox(height: 8),
+                                            gapH8,
                                             Text(job.reason),
                                           ],
                                         ),
@@ -258,7 +263,7 @@ class _faceReadingScreenState extends ConsumerState<FaceReadingScreen> {
                           ],
                         ),
 
-                  SizedBox(height: 60),
+                  gapH64,
 
                   if (isExpanded && promisingJobEndIndex < 2)
                     Builder(
@@ -291,6 +296,8 @@ https://fortune.fruitshop.app""";
                               setState(() {
                                 promisingJobEndIndex = 2;
                               });
+                              if (kReleaseMode)
+                                analytics.logEvent(name: 'click_share_button');
                             },
                           ),
                           icon: Icon(Ionicons.copy_outline),
@@ -303,15 +310,13 @@ https://fortune.fruitshop.app""";
                         );
                       },
                     ),
-                  SizedBox(height: 32),
+                  gapH32,
                   Divider(),
-                  SizedBox(height: 16),
+                  gapH16,
                   SupportScreen(),
-                  SizedBox(height: 40),
-                  BuyMeACoffeeButton(
-                    shopID: kReleaseMode ? '230822' : '230812',
-                  ),
-                  SizedBox(height: 16),
+                  gapH40,
+                  TranslatedBuymeacoffeeButton(),
+                  gapH16,
                   Footer(),
                 ],
               ),

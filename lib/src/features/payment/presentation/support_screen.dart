@@ -16,88 +16,94 @@ class SupportScreen extends ConsumerStatefulWidget {
 
 class _SupportScreenState extends ConsumerState<SupportScreen> {
   int selectedIndex = 0;
+  final scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
-    final purchasesAsyncValue = ref.watch(purchaseStreamProvider);
     final textTheme = Theme.of(context).textTheme;
-    final carouselController = CarouselController();
+    final purchasesAsyncValue = ref.watch(purchaseStreamProvider);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Consumer(
-          builder: (context, ref, child) {
-            final translatedText = ref.watch(translatedTextProvider(
-                "It's Free to Operate Thanks to Supporters"));
-            return translatedText.when(
-              data: (text) => Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    text,
-                    textAlign: TextAlign.center,
-                    style: textTheme.titleMedium!.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  gapW8,
-                  Assets.emojis.greenHeart.image(
-                    width: 16,
-                    height: 16,
-                  ),
-                ],
-              ),
-              loading: () => Text(''),
-              error: (e, st) => Text(''),
-            );
-          },
-        ),
-        SizedBox(height: 16),
-        AsyncValueWidget(
-            value: purchasesAsyncValue,
-            data: (purchases) {
-              return ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: 100),
-                child: CarouselView(
-                  itemExtent: 300,
-                  shrinkExtent: 300,
-                  onTap: null,
-                  // (index) {
-                  //   selectedIndex = index;
-                  //   // print('index: $index');
-                  //   // carouselController.jumpTo(selectedIndex.toDouble());
-                  //   // carouselController.animateTo(index.toDouble(),
-                  //   //     duration: Duration(seconds: 1),
-                  //   //     curve: Curves.easeInOut);
-                  // },
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  controller: carouselController,
+    return SelectionContainer.disabled(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Consumer(
+            builder: (context, ref, child) {
+              final translatedText = ref.watch(translatedTextProvider(
+                  "It's Free to Operate Thanks to Supporters"));
+              return translatedText.when(
+                data: (text) => Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ...purchases.map((purchase) {
+                    Text(
+                      text,
+                      textAlign: TextAlign.center,
+                      style: textTheme.titleMedium!.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    gapW8,
+                    Assets.emojis.greenHeart.image(
+                      width: 16,
+                      height: 16,
+                    ),
+                  ],
+                ),
+                loading: () => Text(''),
+                error: (e, st) => Text(''),
+              );
+            },
+          ),
+          gapH16,
+          AsyncValueWidget(
+              value: purchasesAsyncValue,
+              loading: () => gapH64,
+              data: (purchases) {
+                return ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: 80),
+                  child: ListView.builder(
+                    itemCount: purchases.length,
+                    itemExtent: 300,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    controller: scrollController,
+                    itemBuilder: (context, index) {
+                      final purchase = purchases[index];
                       return Card(
                         elevation: 0.5,
                         child: ListTile(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                           dense: true,
+                          onTap: () {
+                            // setState(() {
+                            //   selectedIndex = index;
+                            //   scrollController.animateTo(
+                            //     index * 300.0,
+                            //     duration: Duration(milliseconds: 300),
+                            //     curve: Curves.easeInOut,
+                            //   );
+                            // });
+                          },
                           visualDensity: VisualDensity.compact,
                           title: Text(purchase.supporterName),
                           subtitle: Text(purchase.message),
                           trailing: Text(
                             'x' + (purchase.quantity * 10).toString(),
-                            style: textTheme.bodySmall!.copyWith(
+                            style: textTheme.bodyMedium!.copyWith(
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
                       );
-                    }).toList()
-                  ],
-                ),
-              );
-            }),
-      ],
+                    },
+                  ),
+                );
+              }),
+        ],
+      ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fortune/src/constants/app_sizes.dart';
 import 'package:fortune/src/localization/data/locale_notifier.dart';
 import 'package:fortune/src/router/router.dart';
 import 'package:go_router/go_router.dart';
@@ -22,7 +23,7 @@ class AppBarTitle extends StatelessWidget {
             data: (text) => Row(
               children: [
                 Assets.appIcon.image(width: 24, height: 24),
-                const SizedBox(width: 8),
+                 gapW8,
                 Text(
                   text,
                   style: textTheme.titleLarge,

@@ -45,6 +45,7 @@ class _AppHeadState extends State<AppHead> {
           MetaTag(name: 'description', content: widget.description),
           if (widget.author != null)
             MetaTag(name: 'author', content: widget.author),
+          LinkTag(rel: 'canonical', href: 'http://fortune.fruitshop.app'),
         ],
         child: widget.child,
       ),

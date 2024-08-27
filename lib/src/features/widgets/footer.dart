@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fortune/generated/flutter_gen/assets.gen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../main.dart';
 import '../../constants/app_sizes.dart';
 import '../seo/widgets/app_link.dart';
 
@@ -51,16 +53,18 @@ class FooterLinks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Wrap(
-      runSpacing: 16,
-      spacing: 16,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        ContactEmail(),
-        GitHub(),
-        LinkedIn(),
-        KakaoOpenChat(),
-      ],
+    return SelectionContainer.disabled(
+      child: const Wrap(
+        runSpacing: 16,
+        spacing: 16,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          ContactEmail(),
+          GitHub(),
+          LinkedIn(),
+          KakaoOpenChat(),
+        ],
+      ),
     );
   }
 }
@@ -75,9 +79,13 @@ class Fruitshop extends StatelessWidget {
       href: 'https://fruitshop.app',
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: () => launchUrl(
-          Uri.parse('https://fruitshop.app'),
-        ),
+        onTap: () {
+          launchUrl(
+            Uri.parse('https://fruitshop.app'),
+          );
+          if (kReleaseMode)
+            analytics.logEvent(name: 'Click fruitshop.app footer link');
+        },
         child: Assets.icons.furitshopAppIcon.image(height: 24),
       ),
     );
@@ -94,9 +102,13 @@ class GitHub extends StatelessWidget {
       href: 'https://github.com/ska2519',
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: () => launchUrl(
-          Uri.parse('https://github.com/ska2519'),
-        ),
+        onTap: () {
+          launchUrl(
+            Uri.parse('https://github.com/ska2519'),
+          );
+          if (kReleaseMode)
+            analytics.logEvent(name: 'Click Github footer link');
+        },
         child: Assets.icons.githubMark.svg(height: 24),
       ),
     );
@@ -113,9 +125,13 @@ class KakaoOpenChat extends StatelessWidget {
       href: 'https://open.kakao.com/o/sapBuEKg',
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: () => launchUrl(
-          Uri.parse('https://open.kakao.com/o/sapBuEKg'),
-        ),
+        onTap: () {
+          launchUrl(
+            Uri.parse('https://open.kakao.com/o/sapBuEKg'),
+          );
+          if (kReleaseMode)
+            analytics.logEvent(name: 'Click KakaoTalk Open Chat footer link');
+        },
         child: Assets.icons.kakao.svg(height: 32),
       ),
     );
@@ -132,9 +148,13 @@ class LinkedIn extends StatelessWidget {
       href: 'https://www.linkedin.com/in/ska2519',
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: () => launchUrl(
-          Uri.parse('https://www.linkedin.com/in/ska2519'),
-        ),
+        onTap: () {
+          launchUrl(
+            Uri.parse('https://www.linkedin.com/in/ska2519'),
+          );
+          if (kReleaseMode)
+            analytics.logEvent(name: 'Click Linked in Profile footer link');
+        },
         child: Assets.icons.iconLinkedin.svg(height: 24),
       ),
     );
